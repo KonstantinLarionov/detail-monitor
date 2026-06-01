@@ -8,21 +8,37 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <aside class="side-menu" aria-label="Основное меню">
+    <div class="side-menu-top"></div>
+    <nav class="side-menu-nav">
+      <a class="side-menu-link" href="#" aria-label="Сводная информация">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="13" cy="13" r="9"/><path d="M13 4v9h9M19 19h9v9h-9z"/></svg>
+      </a>
+      <a class="side-menu-link" href="#" aria-label="Карточки">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 8h20v14H6zM9 11h14v8H9zM11 24h10"/><path d="M12 14h8M12 17h6"/></svg>
+      </a>
+      <a class="side-menu-link" href="#" aria-label="Карта">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 10l7-4 8 4 7-4v17l-7 4-8-4-7 4zM12 6v17M20 10v17"/><circle cx="16" cy="11" r="3"/><path d="M16 14v4"/></svg>
+      </a>
+      <a class="side-menu-link" href="#" aria-label="Документы">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 4h18v24H7zM11 10h10M11 15h10M11 20h7"/></svg>
+      </a>
+      <a class="side-menu-link active" href="#" aria-label="Мониторинг">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 5h18v18H6z"/><circle cx="19" cy="19" r="8"/><path d="M19 13v6h6"/></svg>
+      </a>
+    </nav>
+  </aside>
+
   <header class="topbar">
     <div class="container-fluid d-flex align-items-center justify-content-between h-100">
-      <div></div>
+      <div class="topbar-title">
+        <span>Панель администрирования</span>
+        <span>/</span>
+        <b>Мониторинг интеграции с ИИ</b>
+      </div>
       <div class="user-block">Константинов Константин Сергеевич <span class="user-icon">●</span> <span class="power-icon">◯</span></div>
     </div>
   </header>
-
-  <nav class="breadcrumb-bar">
-    <div class="container-fluid d-flex align-items-center gap-3">
-      <span class="menu-icon">☰</span>
-      <span>Панель администрирования</span>
-      <span>/</span>
-      <b>Мониторинг интеграции с ИИ</b>
-    </div>
-  </nav>
 
   <main class="container-fluid px-0">
     <section class="page-heading">
