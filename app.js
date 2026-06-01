@@ -91,30 +91,53 @@ Highcharts.chart('endpoints-chart', {
   xAxis: { categories: hours, title: { text: 'Время' } },
   yAxis: [
     { title: { text: 'Запросы в минуту' }, min: 0 },
-    { title: { text: 'Доля ошибок, %' }, min: 0, max: 3, opposite: true }
+    { title: { text: 'Ошибки, шт.' }, min: 0, opposite: true, allowDecimals: false }
   ],
   tooltip: { shared: true },
-  plotOptions: { series: { marker: { radius: 4 }, lineWidth: 3 } },
+  plotOptions: {
+    series: { marker: { radius: 4 }, lineWidth: 3 },
+    column: { stacking: 'normal', borderWidth: 0, pointPadding: 0.12, groupPadding: 0.18, opacity: 0.72 }
+  },
   series: [
-    { name: 'POST /letters', data: [180, 205, 228, 252, 264, 241], color: palette.purple, tooltip: { valueSuffix: ' запр./мин.' } },
-    { name: 'POST /answers', data: [110, 128, 142, 153, 171, 160], color: palette.sky, tooltip: { valueSuffix: ' запр./мин.' } },
-    { name: 'GET /results', data: [215, 242, 298, 336, 374, 348], color: palette.orange, tooltip: { valueSuffix: ' запр./мин.' } },
-    { name: 'Ошибки endpoints', type: 'column', yAxis: 1, data: [0.42, 0.61, 0.85, 1.32, 1.86, 1.11], color: 'rgba(219,45,77,.28)', tooltip: { valueSuffix: '%' } }
+    { name: 'Ошибки POST /letters', type: 'column', stack: 'errors', yAxis: 1, zIndex: 0, data: [3, 4, 6, 8, 12, 7], color: palette.purple, tooltip: { valueSuffix: ' шт.' } },
+    { name: 'Ошибки POST /answers', type: 'column', stack: 'errors', yAxis: 1, zIndex: 0, data: [1, 2, 2, 3, 4, 3], color: palette.sky, tooltip: { valueSuffix: ' шт.' } },
+    { name: 'Ошибки GET /results', type: 'column', stack: 'errors', yAxis: 1, zIndex: 0, data: [2, 3, 5, 7, 10, 6], color: palette.orange, tooltip: { valueSuffix: ' шт.' } },
+    { name: 'POST /letters', data: [180, 205, 228, 252, 264, 241], color: palette.purple, zIndex: 3, tooltip: { valueSuffix: ' запр./мин.' } },
+    { name: 'POST /answers', data: [110, 128, 142, 153, 171, 160], color: palette.sky, zIndex: 3, tooltip: { valueSuffix: ' запр./мин.' } },
+    { name: 'GET /results', data: [215, 242, 298, 336, 374, 348], color: palette.orange, zIndex: 3, tooltip: { valueSuffix: ' запр./мин.' } }
   ]
 });
 
 Highcharts.chart('queues-chart', {
-  chart: { type: 'areaspline' },
+  chart: { type: 'bar' },
   title: { text: null },
   xAxis: { categories: hours, title: { text: 'Время' } },
-  yAxis: { title: { text: 'Сообщения, шт.' }, min: 0 },
-  tooltip: { shared: true, valueSuffix: ' сообщений' },
+  yAxis: {
+    title: { text: 'Сообщения, шт.' },
+    labels: {
+      formatter() {
+        return Highcharts.numberFormat(Math.abs(this.value), 0);
+      }
+    }
+  },
+  tooltip: {
+    shared: true,
+    formatter() {
+      return `<b>${this.x}</b><br>${this.points.map((point) => {
+        return `<span style="color:${point.color}">●</span> ${point.series.name}: <b>${Highcharts.numberFormat(Math.abs(point.y), 0)} сообщений</b>`;
+      }).join('<br>')}`;
+    }
+  },
   plotOptions: {
-    areaspline: { fillOpacity: 0.16, marker: { radius: 4 }, lineWidth: 3 }
+    series: {
+      stacking: 'normal',
+      borderWidth: 0,
+      borderRadius: 3
+    }
   },
   series: [
     { name: 'Входящая очередь', data: [1020, 1650, 2380, 3520, 4810, 3240], color: palette.purple },
-    { name: 'Исходящая очередь', data: [190, 310, 460, 720, 910, 420], color: palette.sky }
+    { name: 'Исходящая очередь', data: [-190, -310, -460, -720, -910, -420], color: palette.sky }
   ]
 });
 
