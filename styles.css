@@ -244,6 +244,20 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
 .monitoring-table td { padding: 8px 11px; border-bottom-color: #e8edf0; white-space: nowrap; }
 .monitoring-table tr:last-child td { border-bottom: none; }
 
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.sortable-header::after {
+  margin-left: 5px;
+  color: #93a0aa;
+  content: "↕";
+}
+
+.sortable-header[data-direction="asc"]::after { content: "↑"; }
+.sortable-header[data-direction="desc"]::after { content: "↓"; }
+
 .danger-text { color: var(--red) !important; font-weight: 700; }
 .warning-text { color: #c68100 !important; font-weight: 700; }
 
@@ -266,6 +280,10 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
 .metric-card strong { display: block; margin: 5px 0 3px; font-size: 25px; }
 
 .limit-panel, .settings-panel { padding: 18px; }
+.queue-capacity-panel { padding: 18px; border: 1px solid var(--border); border-radius: 3px; background: #fff; }
+.queue-capacity-panel p { margin-top: 4px; }
+.queue-capacity-progress .progress-bar { background: var(--sky); }
+.chart-subtitle { margin: -10px -10px 8px; }
 .limit-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .limit-heading span { font-weight: 700; }
 .limit-heading b { color: var(--yellow); font-size: 28px; }

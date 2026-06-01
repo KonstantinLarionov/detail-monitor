@@ -146,7 +146,7 @@
       <div class="section-title">
         <div>
           <h2>Нагрузка на endpoints ИИ</h2>
-          <p>Сравнение интенсивности запросов и доли ошибок по методам сервиса</p>
+          <p>График сгруппирован по направлениям 1023, 93 и 265, таблица содержит детализацию по интерфейсам сервиса</p>
         </div>
         <label class="inline-select">
           <span>Показатель</span>
@@ -161,17 +161,22 @@
       </div>
       <div class="table-panel">
         <div class="table-title">
-          <span>Endpoints за выбранный период</span>
+          <span>Интерфейсы ИИ за выбранный период</span>
         </div>
         <div class="table-responsive">
           <table id="endpoints-details-table" class="table table-sm monitoring-table mb-0">
             <thead>
-              <tr><th>Endpoint</th><th>Запросы</th><th>Успешно</th><th>Ошибки</th><th>Доля ошибок</th><th>Среднее время</th><th>Максимум</th><th>Пиковая нагрузка</th></tr>
+              <tr><th>Группа</th><th>Функциональный блок</th><th>Интерфейс</th><th>Протокол</th><th>Всего</th><th>Ошибки</th><th>Среднее время</th></tr>
             </thead>
             <tbody>
-              <tr><td><b>POST</b> /letters</td><td>12 450</td><td>12 310</td><td class="danger-text">140</td><td>1,12%</td><td>1,8 сек.</td><td>12 сек.</td><td>264 запр./мин.</td></tr>
-              <tr><td><b>POST</b> /answers</td><td>8 720</td><td>8 701</td><td>19</td><td>0,22%</td><td>0,9 сек.</td><td>7 сек.</td><td>171 запр./мин.</td></tr>
-              <tr><td><b>GET</b> /results</td><td>20 890</td><td>20 700</td><td class="danger-text">190</td><td>0,91%</td><td>0,4 сек.</td><td>4 сек.</td><td>374 запр./мин.</td></tr>
+              <tr><td><b>1023</b></td><td>Оценка ответа</td><td><b>POST</b> /rate</td><td>REST API</td><td>6 000</td><td class="danger-text">54</td><td>1,8 сек.</td></tr>
+              <tr><td><b>1023</b></td><td>Тематический поиск</td><td><b>POST</b> /wordcloud</td><td>REST API</td><td>4 490</td><td>33</td><td>1,1 сек.</td></tr>
+              <tr><td><b>1023</b></td><td>Отмена сообщений в очереди</td><td><b>POST</b> /cancel</td><td>REST API</td><td>1 040</td><td>12</td><td>0,8 сек.</td></tr>
+              <tr><td><b>93</b></td><td>Отправка ответов, оценка и рекомендации</td><td>MOSEDO_AI.RATING.IN → OUT</td><td>RabbitMQ</td><td>10 950</td><td class="danger-text">96</td><td>4,2 сек.</td></tr>
+              <tr><td><b>265</b></td><td>Загрузка исторических данных</td><td>MOSEDO_AI.HISTORY.IN → RATING.OUT</td><td>RabbitMQ</td><td>3 940</td><td>21</td><td>7,6 сек.</td></tr>
+              <tr><td><b>265</b></td><td>Анализ проблем</td><td>MOSEDO_AI.PROBLEMS.IN → OUT</td><td>RabbitMQ</td><td>1 810</td><td>17</td><td>9,4 сек.</td></tr>
+              <tr><td><b>265</b></td><td>Контекстный поиск</td><td>MOSEDO_AI.SEARCH.IN → OUT</td><td>RabbitMQ</td><td>4 980</td><td class="danger-text">67</td><td>5,8 сек.</td></tr>
+              <tr><td><b>265</b></td><td>Отмена обработанных сообщений</td><td>MOSEDO_AI.CANCEL.IN → OUT</td><td>RabbitMQ</td><td>680</td><td>6</td><td>2,9 сек.</td></tr>
             </tbody>
           </table>
         </div>
@@ -195,18 +200,29 @@
       <div class="chart-panel">
         <div id="queues-chart" class="chart chart-medium"></div>
       </div>
+      <div class="chart-panel mt-3">
+        <div class="table-title chart-subtitle">Очереди по функциональным группам</div>
+        <div id="queues-functional-chart" class="chart chart-medium"></div>
+      </div>
       <div class="table-panel">
         <div class="table-title">
-          <span>Состояние очередей</span>
+          <span>Состояние очередей: детализация</span>
         </div>
         <div class="table-responsive">
-          <table id="queues-details-table" class="table table-sm monitoring-table mb-0">
+          <table id="queues-details-table" class="table table-sm monitoring-table sortable-table mb-0">
             <thead>
-              <tr><th>Очередь</th><th>Текущий размер</th><th>Максимум за период</th><th>Поступило</th><th>Обработано</th><th>Ошибки</th><th>Среднее ожидание</th><th>Максимальное ожидание</th></tr>
+              <tr><th>Группа</th><th>Очередь</th><th>Направление</th><th>Текущий размер</th><th>Максимум за период</th><th>Поступило</th><th>Обработано</th><th>Ошибки</th><th>Среднее ожидание</th><th>Максимальное ожидание</th></tr>
             </thead>
             <tbody>
-              <tr><td>Входящая</td><td class="warning-text">3 240</td><td>4 810</td><td>42 060</td><td>38 820</td><td class="danger-text">182</td><td>8 мин.</td><td>27 мин.</td></tr>
-              <tr><td>Исходящая</td><td>420</td><td>910</td><td>38 820</td><td>38 400</td><td>21</td><td>2 мин.</td><td>9 мин.</td></tr>
+              <tr><td>93</td><td>MOSEDO_AI.RATING.IN</td><td>Входящая</td><td class="warning-text">1 520</td><td>2 340</td><td>18 900</td><td>17 380</td><td class="danger-text">84</td><td>8 мин.</td><td>27 мин.</td></tr>
+              <tr><td>93</td><td>MOSEDO_AI.RATING.OUT</td><td>Исходящая</td><td>210</td><td>480</td><td>17 380</td><td>17 170</td><td>9</td><td>2 мин.</td><td>7 мин.</td></tr>
+              <tr><td>265</td><td>MOSEDO_AI.PROBLEMS.IN</td><td>Входящая</td><td>440</td><td>670</td><td>4 120</td><td>3 680</td><td>21</td><td>6 мин.</td><td>18 мин.</td></tr>
+              <tr><td>265</td><td>MOSEDO_AI.PROBLEMS.OUT</td><td>Исходящая</td><td>65</td><td>140</td><td>3 680</td><td>3 615</td><td>4</td><td>1 мин.</td><td>5 мин.</td></tr>
+              <tr><td>265</td><td>MOSEDO_AI.SEARCH.IN</td><td>Входящая</td><td>620</td><td>910</td><td>7 640</td><td>7 020</td><td>33</td><td>5 мин.</td><td>16 мин.</td></tr>
+              <tr><td>265</td><td>MOSEDO_AI.SEARCH.OUT</td><td>Исходящая</td><td>95</td><td>210</td><td>7 020</td><td>6 925</td><td>5</td><td>2 мин.</td><td>6 мин.</td></tr>
+              <tr><td>Загрузка</td><td>MOSEDO_AI.HISTORY.IN</td><td>Входящая</td><td>540</td><td>760</td><td>9 870</td><td>9 330</td><td>31</td><td>7 мин.</td><td>22 мин.</td></tr>
+              <tr><td>Отмены</td><td>MOSEDO_AI.CANCEL.IN</td><td>Входящая</td><td>120</td><td>180</td><td>1 530</td><td>1 410</td><td>13</td><td>3 мин.</td><td>11 мин.</td></tr>
+              <tr><td>Отмены</td><td>MOSEDO_AI.CANCEL.OUT</td><td>Исходящая</td><td>50</td><td>80</td><td>1 410</td><td>1 360</td><td>3</td><td>1 мин.</td><td>4 мин.</td></tr>
             </tbody>
           </table>
         </div>
@@ -224,7 +240,7 @@
         <div class="col-xl-5">
           <div class="limit-panel h-100">
             <div class="limit-heading">
-              <span>Использование максимальной мощности ИИ</span>
+              <span>Использование часового лимита обработки</span>
               <b>78%</b>
             </div>
             <div class="progress limit-progress" role="progressbar" aria-label="Использование максимальной мощности ИИ" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100">
@@ -234,18 +250,16 @@
             </div>
             <div class="progress-labels"><span>0%</span><span>Предупреждение: 75%</span><span>Критично: 90%</span><span>100%</span></div>
             <div class="row g-2 mt-3">
-              <div class="col-sm-4"><div class="limit-stat"><span>Текущая нагрузка</span><b>780</b><small>запросов/мин.</small></div></div>
-              <div class="col-sm-4"><div class="limit-stat"><span>Максимум</span><b>1 000</b><small>запросов/мин.</small></div></div>
-              <div class="col-sm-4"><div class="limit-stat"><span>Доступный резерв</span><b>220</b><small>запросов/мин.</small></div></div>
+              <div class="col-sm-4"><div class="limit-stat"><span>Обработано за час</span><b>78</b><small>запросов</small></div></div>
+              <div class="col-sm-4"><div class="limit-stat"><span>Лимит в час</span><b>100</b><small>запросов</small></div></div>
+              <div class="col-sm-4"><div class="limit-stat"><span>Доступный резерв</span><b>22</b><small>запроса</small></div></div>
             </div>
           </div>
         </div>
         <div class="col-xl-7">
           <form class="settings-panel">
             <div class="row g-3">
-              <label class="col-md-6 form-label">Максимальная обработка запросов в минуту<input class="form-control form-control-sm" type="number" value="1000"></label>
-              <label class="col-md-6 form-label">Максимальный размер входящей очереди<input class="form-control form-control-sm" type="number" value="10000"></label>
-              <label class="col-md-6 form-label">Максимальный размер исходящей очереди<input class="form-control form-control-sm" type="number" value="5000"></label>
+              <label class="col-md-6 form-label">Максимальная обработка запросов в час<input class="form-control form-control-sm" type="number" value="100"></label>
               <label class="col-md-3 form-label">Порог предупреждения, %<input class="form-control form-control-sm" type="number" value="75"></label>
               <label class="col-md-3 form-label">Критический порог, %<input class="form-control form-control-sm" type="number" value="90"></label>
             </div>
@@ -255,6 +269,19 @@
             </div>
           </form>
         </div>
+      </div>
+      <div class="queue-capacity-panel mt-3">
+        <div class="limit-heading">
+          <span>Экспериментальный контроль суммы элементов во всех очередях</span>
+          <b>0,37%</b>
+        </div>
+        <p>При достижении 1 000 000 элементов обработка может остановиться. Показатель рассчитывается как сумма текущих размеров всех очередей.</p>
+        <div class="progress limit-progress queue-capacity-progress" role="progressbar" aria-label="Сумма элементов во всех очередях" aria-valuenow="0.37" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar" style="width: 0.37%"></div>
+          <span class="progress-marker warning-marker" title="Порог предупреждения: 75%"></span>
+          <span class="progress-marker danger-marker" title="Критический порог: 90%"></span>
+        </div>
+        <div class="progress-labels"><span>0</span><span>Сейчас: 3 660</span><span>Экспериментальный максимум: 1 000 000</span></div>
       </div>
     </section>
   </main>

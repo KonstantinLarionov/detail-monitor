@@ -99,12 +99,12 @@ Highcharts.chart('endpoints-chart', {
     column: { stacking: 'normal', borderWidth: 0, pointPadding: 0.12, groupPadding: 0.18, opacity: 0.72 }
   },
   series: [
-    { name: 'Ошибки POST /letters', type: 'column', stack: 'errors', yAxis: 1, zIndex: 0, data: [3, 4, 6, 8, 12, 7], color: palette.purple, tooltip: { valueSuffix: ' шт.' } },
-    { name: 'Ошибки POST /answers', type: 'column', stack: 'errors', yAxis: 1, zIndex: 0, data: [1, 2, 2, 3, 4, 3], color: palette.sky, tooltip: { valueSuffix: ' шт.' } },
-    { name: 'Ошибки GET /results', type: 'column', stack: 'errors', yAxis: 1, zIndex: 0, data: [2, 3, 5, 7, 10, 6], color: palette.orange, tooltip: { valueSuffix: ' шт.' } },
-    { name: 'POST /letters', data: [180, 205, 228, 252, 264, 241], color: palette.purple, zIndex: 3, tooltip: { valueSuffix: ' запр./мин.' } },
-    { name: 'POST /answers', data: [110, 128, 142, 153, 171, 160], color: palette.sky, zIndex: 3, tooltip: { valueSuffix: ' запр./мин.' } },
-    { name: 'GET /results', data: [215, 242, 298, 336, 374, 348], color: palette.orange, zIndex: 3, tooltip: { valueSuffix: ' запр./мин.' } }
+    { name: 'Ошибки: 1023 REST API', type: 'column', stack: 'errors', yAxis: 1, zIndex: 0, data: [3, 4, 6, 8, 12, 7], color: palette.purple, tooltip: { valueSuffix: ' шт.' } },
+    { name: 'Ошибки: 93 ответы и рекомендации', type: 'column', stack: 'errors', yAxis: 1, zIndex: 0, data: [2, 3, 5, 7, 10, 6], color: palette.orange, tooltip: { valueSuffix: ' шт.' } },
+    { name: 'Ошибки: 265 остальные сценарии', type: 'column', stack: 'errors', yAxis: 1, zIndex: 0, data: [1, 2, 3, 4, 6, 4], color: palette.sky, tooltip: { valueSuffix: ' шт.' } },
+    { name: '1023 REST API', data: [180, 205, 228, 252, 264, 241], color: palette.purple, zIndex: 3, tooltip: { valueSuffix: ' запр./мин.' } },
+    { name: '93 ответы и рекомендации', data: [110, 128, 142, 153, 171, 160], color: palette.orange, zIndex: 3, tooltip: { valueSuffix: ' запр./мин.' } },
+    { name: '265 остальные сценарии', data: [62, 74, 88, 96, 112, 104], color: palette.sky, zIndex: 3, tooltip: { valueSuffix: ' запр./мин.' } }
   ]
 });
 
@@ -114,40 +114,6 @@ Highcharts.chart('queues-chart', {
   xAxis: { categories: hours, title: { text: 'Время' } },
   yAxis: {
     title: { text: 'Сообщения, шт.' },
-    min: -5500,
-    max: 10500,
-    plotLines: [
-      {
-        value: 10000,
-        color: palette.purple,
-        width: 2,
-        zIndex: 4,
-        dashStyle: 'ShortDash',
-        label: {
-          text: 'Лимит входящей: 10 000',
-          align: 'right',
-          x: -12,
-          y: -7,
-          rotation: 0,
-          style: { color: palette.purple, fontSize: '10px' }
-        }
-      },
-      {
-        value: -5000,
-        color: palette.sky,
-        width: 2,
-        zIndex: 4,
-        dashStyle: 'ShortDash',
-        label: {
-          text: 'Лимит исходящей: 5 000',
-          align: 'left',
-          x: 6,
-          y: -7,
-          rotation: 0,
-          style: { color: '#238bb7', fontSize: '10px' }
-        }
-      }
-    ],
     labels: {
       formatter() {
         return Highcharts.numberFormat(Math.abs(this.value), 0);
@@ -171,27 +137,24 @@ Highcharts.chart('queues-chart', {
   },
   series: [
     { name: 'Входящая очередь', data: [1020, 1650, 2380, 3520, 4810, 3240], color: palette.purple },
-    { name: 'Исходящая очередь', data: [-190, -310, -460, -720, -910, -420], color: palette.sky },
-    {
-      name: 'Лимит входящей очереди: 10 000',
-      type: 'line',
-      data: [],
-      color: palette.purple,
-      dashStyle: 'ShortDash',
-      marker: { enabled: false },
-      enableMouseTracking: false,
-      showInLegend: true
-    },
-    {
-      name: 'Лимит исходящей очереди: 5 000',
-      type: 'line',
-      data: [],
-      color: palette.sky,
-      dashStyle: 'ShortDash',
-      marker: { enabled: false },
-      enableMouseTracking: false,
-      showInLegend: true
-    }
+    { name: 'Исходящая очередь', data: [-190, -310, -460, -720, -910, -420], color: palette.sky }
+  ]
+});
+
+Highcharts.chart('queues-functional-chart', {
+  chart: { type: 'column' },
+  title: { text: null },
+  xAxis: { categories: hours, title: { text: 'Время' } },
+  yAxis: { title: { text: 'Элементы в очередях, шт.' }, min: 0 },
+  tooltip: { shared: true, valueSuffix: ' элементов' },
+  plotOptions: {
+    column: { stacking: 'normal', borderWidth: 0, borderRadius: 2 }
+  },
+  series: [
+    { name: '93: ответы и рекомендации', data: [470, 690, 980, 1310, 1730, 1520], color: palette.purple },
+    { name: '265: остальные сценарии', data: [310, 460, 650, 880, 1120, 860], color: palette.sky },
+    { name: 'Загрузка: общая и история', data: [180, 330, 560, 890, 1240, 540], color: palette.orange },
+    { name: 'Отмены', data: [60, 170, 190, 440, 720, 320], color: palette.red }
   ]
 });
 
@@ -214,7 +177,7 @@ function escapeCsvCell(value) {
 const exportedTables = [
   { title: 'Детализация частоты обращений', id: 'frequency-details-table' },
   { title: 'Ресурсы за выбранный период', id: 'resources-details-table' },
-  { title: 'Endpoints за выбранный период', id: 'endpoints-details-table' },
+  { title: 'Интерфейсы ИИ за выбранный период', id: 'endpoints-details-table' },
   { title: 'Состояние очередей', id: 'queues-details-table' }
 ];
 
@@ -248,3 +211,31 @@ function exportAllTablesToCsv() {
 }
 
 document.getElementById('export-all-tables').addEventListener('click', exportAllTablesToCsv);
+
+function normalizeSortValue(value) {
+  const compact = value.replace(/\s/g, '').replace(',', '.');
+  const numeric = Number.parseFloat(compact);
+  return Number.isNaN(numeric) ? value.trim().toLocaleLowerCase('ru') : numeric;
+}
+
+document.querySelectorAll('.sortable-table th').forEach((header, columnIndex) => {
+  header.classList.add('sortable-header');
+  header.addEventListener('click', () => {
+    const table = header.closest('table');
+    const body = table.querySelector('tbody');
+    const direction = header.dataset.direction === 'asc' ? 'desc' : 'asc';
+    table.querySelectorAll('th').forEach((item) => delete item.dataset.direction);
+    header.dataset.direction = direction;
+
+    const rows = Array.from(body.querySelectorAll('tr'));
+    rows.sort((left, right) => {
+      const leftValue = normalizeSortValue(left.children[columnIndex].textContent);
+      const rightValue = normalizeSortValue(right.children[columnIndex].textContent);
+      const result = typeof leftValue === 'number' && typeof rightValue === 'number'
+        ? leftValue - rightValue
+        : String(leftValue).localeCompare(String(rightValue), 'ru');
+      return direction === 'asc' ? result : -result;
+    });
+    rows.forEach((row) => body.appendChild(row));
+  });
+});
