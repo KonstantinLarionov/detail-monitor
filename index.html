@@ -116,7 +116,6 @@
             <option>Все ресурсы</option>
             <option>Обработка обращений</option>
             <option>Обработка ответов</option>
-            <option>Получение результата</option>
           </select>
         </label>
       </div>
@@ -135,7 +134,6 @@
             <tbody>
               <tr><td>Обработка обращений</td><td>12 450</td><td>12 310</td><td class="danger-text">140</td><td>1,8 сек.</td><td>3,7 сек.</td><td>12 сек.</td></tr>
               <tr><td>Обработка ответов</td><td>8 720</td><td>8 701</td><td>19</td><td>0,9 сек.</td><td>2,1 сек.</td><td>7 сек.</td></tr>
-              <tr><td>Получение результата</td><td>20 890</td><td>20 700</td><td class="danger-text">190</td><td>0,4 сек.</td><td>1,2 сек.</td><td>4 сек.</td></tr>
             </tbody>
           </table>
         </div>
@@ -236,6 +234,19 @@
           <p>Контроль близости к максимальной мощности обработки</p>
         </div>
       </div>
+      <div class="queue-capacity-panel mb-3">
+        <div class="limit-heading">
+          <span>Экспериментальный контроль суммы элементов во всех очередях</span>
+          <b>0,37%</b>
+        </div>
+        <p>При достижении 1 000 000 элементов обработка может остановиться. Показатель рассчитывается как сумма текущих размеров всех очередей.</p>
+        <div class="progress limit-progress queue-capacity-progress" role="progressbar" aria-label="Сумма элементов во всех очередях" aria-valuenow="0.37" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar" style="width: 0.37%"></div>
+          <span class="progress-marker warning-marker" title="Порог предупреждения: 75%"></span>
+          <span class="progress-marker danger-marker" title="Критический порог: 90%"></span>
+        </div>
+        <div class="progress-labels"><span>0</span><span>Сейчас: 3 660</span><span>Экспериментальный максимум: 1 000 000</span></div>
+      </div>
       <div class="row g-3">
         <div class="col-xl-5">
           <div class="limit-panel h-100">
@@ -269,19 +280,6 @@
             </div>
           </form>
         </div>
-      </div>
-      <div class="queue-capacity-panel mt-3">
-        <div class="limit-heading">
-          <span>Экспериментальный контроль суммы элементов во всех очередях</span>
-          <b>0,37%</b>
-        </div>
-        <p>При достижении 1 000 000 элементов обработка может остановиться. Показатель рассчитывается как сумма текущих размеров всех очередей.</p>
-        <div class="progress limit-progress queue-capacity-progress" role="progressbar" aria-label="Сумма элементов во всех очередях" aria-valuenow="0.37" aria-valuemin="0" aria-valuemax="100">
-          <div class="progress-bar" style="width: 0.37%"></div>
-          <span class="progress-marker warning-marker" title="Порог предупреждения: 75%"></span>
-          <span class="progress-marker danger-marker" title="Критический порог: 90%"></span>
-        </div>
-        <div class="progress-labels"><span>0</span><span>Сейчас: 3 660</span><span>Экспериментальный максимум: 1 000 000</span></div>
       </div>
     </section>
   </main>
