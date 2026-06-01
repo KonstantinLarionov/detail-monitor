@@ -211,14 +211,27 @@ function escapeCsvCell(value) {
   return `"${normalized.replace(/"/g, '""')}"`;
 }
 
-function exportTableToCsv(tableId, fileName) {
-  const table = document.getElementById(tableId);
-  if (!table) return;
+const exportedTables = [
+  { title: 'Детализация частоты обращений', id: 'frequency-details-table' },
+  { title: 'Ресурсы за выбранный период', id: 'resources-details-table' },
+  { title: 'Endpoints за выбранный период', id: 'endpoints-details-table' },
+  { title: 'Состояние очередей', id: 'queues-details-table' }
+];
 
-  const rows = Array.from(table.querySelectorAll('tr')).map((row) => {
-    return Array.from(row.querySelectorAll('th, td'))
-      .map((cell) => escapeCsvCell(cell.textContent))
-      .join(';');
+function exportAllTablesToCsv() {
+  const rows = [];
+
+  exportedTables.forEach(({ title, id }, index) => {
+    const table = document.getElementById(id);
+    if (!table) return;
+
+    if (index > 0) rows.push('');
+    rows.push(escapeCsvCell(title));
+    Array.from(table.querySelectorAll('tr')).forEach((row) => {
+      rows.push(Array.from(row.querySelectorAll('th, td'))
+        .map((cell) => escapeCsvCell(cell.textContent))
+        .join(';'));
+    });
   });
 
   const blob = new Blob([`\uFEFF${rows.join('\r\n')}`], {
@@ -227,15 +240,11 @@ function exportTableToCsv(tableId, fileName) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = fileName;
+  link.download = 'ai-monitoring-details.csv';
   document.body.appendChild(link);
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
 }
 
-document.querySelectorAll('[data-export-table]').forEach((button) => {
-  button.addEventListener('click', () => {
-    exportTableToCsv(button.dataset.exportTable, button.dataset.exportFile);
-  });
-});
+document.getElementById('export-all-tables').addEventListener('click', exportAllTablesToCsv);

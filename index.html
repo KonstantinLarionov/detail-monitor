@@ -72,6 +72,7 @@
             </select>
           </label>
           <button class="btn btn-light btn-sm apply-button">Применить</button>
+          <button class="btn btn-light btn-sm export-button export-all-button" type="button" id="export-all-tables">Экспорт CSV</button>
         </div>
       </div>
       <div class="updated-at">Данные обновлены: 14.05.2026 14:35</div>
@@ -91,7 +92,6 @@
       <div class="table-panel">
         <div class="table-title">
           <span>Детализация частоты обращений</span>
-          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="frequency-details-table" data-export-file="frequency-details.csv">Экспорт CSV</button>
         </div>
         <div class="table-responsive">
           <table id="frequency-details-table" class="table table-sm monitoring-table mb-0">
@@ -126,7 +126,6 @@
       <div class="table-panel">
         <div class="table-title">
           <span>Ресурсы за выбранный период</span>
-          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="resources-details-table" data-export-file="resources-details.csv">Экспорт CSV</button>
         </div>
         <div class="table-responsive">
           <table id="resources-details-table" class="table table-sm monitoring-table mb-0">
@@ -163,7 +162,6 @@
       <div class="table-panel">
         <div class="table-title">
           <span>Endpoints за выбранный период</span>
-          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="endpoints-details-table" data-export-file="endpoints-details.csv">Экспорт CSV</button>
         </div>
         <div class="table-responsive">
           <table id="endpoints-details-table" class="table table-sm monitoring-table mb-0">
@@ -200,7 +198,6 @@
       <div class="table-panel">
         <div class="table-title">
           <span>Состояние очередей</span>
-          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="queues-details-table" data-export-file="queues-details.csv">Экспорт CSV</button>
         </div>
         <div class="table-responsive">
           <table id="queues-details-table" class="table table-sm monitoring-table mb-0">

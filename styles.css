@@ -227,6 +227,10 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
   background: #f5f9fc;
 }
 
+.export-all-button {
+  min-height: 31px;
+}
+
 .monitoring-table { font-size: 12px; }
 .monitoring-table th {
   padding: 9px 11px;
