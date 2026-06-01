@@ -114,6 +114,40 @@ Highcharts.chart('queues-chart', {
   xAxis: { categories: hours, title: { text: 'Время' } },
   yAxis: {
     title: { text: 'Сообщения, шт.' },
+    min: -5500,
+    max: 10500,
+    plotLines: [
+      {
+        value: 10000,
+        color: palette.purple,
+        width: 2,
+        zIndex: 4,
+        dashStyle: 'ShortDash',
+        label: {
+          text: 'Лимит входящей: 10 000',
+          align: 'right',
+          x: -12,
+          y: -7,
+          rotation: 0,
+          style: { color: palette.purple, fontSize: '10px' }
+        }
+      },
+      {
+        value: -5000,
+        color: palette.sky,
+        width: 2,
+        zIndex: 4,
+        dashStyle: 'ShortDash',
+        label: {
+          text: 'Лимит исходящей: 5 000',
+          align: 'left',
+          x: 6,
+          y: -7,
+          rotation: 0,
+          style: { color: '#238bb7', fontSize: '10px' }
+        }
+      }
+    ],
     labels: {
       formatter() {
         return Highcharts.numberFormat(Math.abs(this.value), 0);
@@ -137,7 +171,27 @@ Highcharts.chart('queues-chart', {
   },
   series: [
     { name: 'Входящая очередь', data: [1020, 1650, 2380, 3520, 4810, 3240], color: palette.purple },
-    { name: 'Исходящая очередь', data: [-190, -310, -460, -720, -910, -420], color: palette.sky }
+    { name: 'Исходящая очередь', data: [-190, -310, -460, -720, -910, -420], color: palette.sky },
+    {
+      name: 'Лимит входящей очереди: 10 000',
+      type: 'line',
+      data: [],
+      color: palette.purple,
+      dashStyle: 'ShortDash',
+      marker: { enabled: false },
+      enableMouseTracking: false,
+      showInLegend: true
+    },
+    {
+      name: 'Лимит исходящей очереди: 5 000',
+      type: 'line',
+      data: [],
+      color: palette.sky,
+      dashStyle: 'ShortDash',
+      marker: { enabled: false },
+      enableMouseTracking: false,
+      showInLegend: true
+    }
   ]
 });
 
