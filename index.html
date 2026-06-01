@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Мониторинг интеграции с ИИ — Детальная информация</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container-fluid d-flex align-items-center justify-content-between h-100">
+      <div></div>
+      <div class="user-block">Константинов Константин Сергеевич <span class="user-icon">●</span> <span class="power-icon">◯</span></div>
+    </div>
+  </header>
+
+  <nav class="breadcrumb-bar">
+    <div class="container-fluid d-flex align-items-center gap-3">
+      <span class="menu-icon">☰</span>
+      <span>Панель администрирования</span>
+      <span>/</span>
+      <b>Мониторинг интеграции с ИИ</b>
+    </div>
+  </nav>
+
+  <main class="container-fluid px-0">
+    <section class="page-heading">
+      <h1>Мониторинг интеграции с ИИ</h1>
+      <ul class="nav nav-pills compact-tabs">
+        <li class="nav-item"><a class="nav-link" href="#">Сводные метрики</a></li>
+        <li class="nav-item"><a class="nav-link active" href="#">Детальная информация</a></li>
+      </ul>
+    </section>
+
+    <section class="content-section first-section">
+      <div class="section-toolbar">
+        <div>
+          <h2>Детальная информация</h2>
+          <p>Техническая нагрузка сервиса ИИ, endpoints и очередей обработки</p>
+        </div>
+        <div class="d-flex flex-wrap align-items-end gap-2">
+          <label class="filter-control">
+            <span>Период с</span>
+            <input class="form-control form-control-sm" type="date" value="2026-05-08">
+          </label>
+          <label class="filter-control">
+            <span>по</span>
+            <input class="form-control form-control-sm" type="date" value="2026-05-14">
+          </label>
+          <label class="filter-control">
+            <span>Группировка</span>
+            <select class="form-select form-select-sm">
+              <option>По часу</option>
+              <option>По минутам</option>
+              <option>По дням</option>
+            </select>
+          </label>
+          <button class="btn btn-light btn-sm apply-button">Применить</button>
+        </div>
+      </div>
+      <div class="updated-at">Данные обновлены: 14.05.2026 14:35</div>
+    </section>
+
+    <section class="content-section">
+      <div class="section-title">
+        <div>
+          <h2>Частота обращений к сервису ИИ</h2>
+          <p>Количество запросов, успешных обработок и ошибок по временным интервалам</p>
+        </div>
+        <span class="status-badge status-ok">Нагрузка допустима</span>
+      </div>
+      <div class="chart-panel">
+        <div id="frequency-chart" class="chart chart-medium"></div>
+      </div>
+      <div class="table-panel">
+        <div class="table-title">
+          <span>Детализация частоты обращений</span>
+          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="frequency-details-table" data-export-file="frequency-details.csv">Экспорт CSV</button>
+        </div>
+        <div class="table-responsive">
+          <table id="frequency-details-table" class="table table-sm monitoring-table mb-0">
+            <thead>
+              <tr><th>Интервал</th><th>Всего запросов</th><th>Успешно обработано</th><th>Ошибки</th><th>Доля ошибок</th></tr>
+            </thead>
+            <tbody id="frequency-table"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <div class="section-title">
+        <div>
+          <h2>Загрузка ресурсов</h2>
+          <p>Количество запросов и длительность обработки ИИ</p>
+        </div>
+        <label class="inline-select">
+          <span>Ресурс</span>
+          <select class="form-select form-select-sm">
+            <option>Все ресурсы</option>
+            <option>Обработка обращений</option>
+            <option>Обработка ответов</option>
+            <option>Получение результата</option>
+          </select>
+        </label>
+      </div>
+      <div class="chart-panel">
+        <div id="resources-chart" class="chart chart-medium"></div>
+      </div>
+      <div class="table-panel">
+        <div class="table-title">
+          <span>Ресурсы за выбранный период</span>
+          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="resources-details-table" data-export-file="resources-details.csv">Экспорт CSV</button>
+        </div>
+        <div class="table-responsive">
+          <table id="resources-details-table" class="table table-sm monitoring-table mb-0">
+            <thead>
+              <tr><th>Ресурс</th><th>Запросы</th><th>Успешно</th><th>Ошибки</th><th>Среднее время</th><th>95-й перцентиль</th><th>Максимум</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Обработка обращений</td><td>12 450</td><td>12 310</td><td class="danger-text">140</td><td>1,8 сек.</td><td>3,7 сек.</td><td>12 сек.</td></tr>
+              <tr><td>Обработка ответов</td><td>8 720</td><td>8 701</td><td>19</td><td>0,9 сек.</td><td>2,1 сек.</td><td>7 сек.</td></tr>
+              <tr><td>Получение результата</td><td>20 890</td><td>20 700</td><td class="danger-text">190</td><td>0,4 сек.</td><td>1,2 сек.</td><td>4 сек.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <div class="section-title">
+        <div>
+          <h2>Нагрузка на endpoints ИИ</h2>
+          <p>Сравнение интенсивности запросов и доли ошибок по методам сервиса</p>
+        </div>
+        <label class="inline-select">
+          <span>Показатель</span>
+          <select class="form-select form-select-sm">
+            <option>Запросы в минуту</option>
+            <option>Среднее время ответа</option>
+          </select>
+        </label>
+      </div>
+      <div class="chart-panel">
+        <div id="endpoints-chart" class="chart chart-medium"></div>
+      </div>
+      <div class="table-panel">
+        <div class="table-title">
+          <span>Endpoints за выбранный период</span>
+          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="endpoints-details-table" data-export-file="endpoints-details.csv">Экспорт CSV</button>
+        </div>
+        <div class="table-responsive">
+          <table id="endpoints-details-table" class="table table-sm monitoring-table mb-0">
+            <thead>
+              <tr><th>Endpoint</th><th>Запросы</th><th>Успешно</th><th>Ошибки</th><th>Доля ошибок</th><th>Среднее время</th><th>Максимум</th><th>Пиковая нагрузка</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><b>POST</b> /letters</td><td>12 450</td><td>12 310</td><td class="danger-text">140</td><td>1,12%</td><td>1,8 сек.</td><td>12 сек.</td><td>264 запр./мин.</td></tr>
+              <tr><td><b>POST</b> /answers</td><td>8 720</td><td>8 701</td><td>19</td><td>0,22%</td><td>0,9 сек.</td><td>7 сек.</td><td>171 запр./мин.</td></tr>
+              <tr><td><b>GET</b> /results</td><td>20 890</td><td>20 700</td><td class="danger-text">190</td><td>0,91%</td><td>0,4 сек.</td><td>4 сек.</td><td>374 запр./мин.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section mb-4">
+      <div class="section-title">
+        <div>
+          <h2>Загрузка очередей ИИ: вход / выход</h2>
+          <p>Размер очередей и скорость обработки сообщений</p>
+        </div>
+        <span class="status-badge status-warning">Требует внимания</span>
+      </div>
+      <div class="row g-3 metric-row">
+        <div class="col-md-3"><div class="metric-card"><span>Входящая очередь сейчас</span><strong>3 240</strong><small>сообщений</small></div></div>
+        <div class="col-md-3"><div class="metric-card"><span>Исходящая очередь сейчас</span><strong>420</strong><small>сообщений</small></div></div>
+        <div class="col-md-3"><div class="metric-card"><span>Среднее время ожидания</span><strong>8 мин.</strong><small>входящая очередь</small></div></div>
+        <div class="col-md-3"><div class="metric-card"><span>Максимальное ожидание</span><strong>27 мин.</strong><small>входящая очередь</small></div></div>
+      </div>
+      <div class="chart-panel">
+        <div id="queues-chart" class="chart chart-medium"></div>
+      </div>
+      <div class="table-panel">
+        <div class="table-title">
+          <span>Состояние очередей</span>
+          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="queues-details-table" data-export-file="queues-details.csv">Экспорт CSV</button>
+        </div>
+        <div class="table-responsive">
+          <table id="queues-details-table" class="table table-sm monitoring-table mb-0">
+            <thead>
+              <tr><th>Очередь</th><th>Текущий размер</th><th>Максимум за период</th><th>Поступило</th><th>Обработано</th><th>Ошибки</th><th>Среднее ожидание</th><th>Максимальное ожидание</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Входящая</td><td class="warning-text">3 240</td><td>4 810</td><td>42 060</td><td>38 820</td><td class="danger-text">182</td><td>8 мин.</td><td>27 мин.</td></tr>
+              <tr><td>Исходящая</td><td>420</td><td>910</td><td>38 820</td><td>38 400</td><td>21</td><td>2 мин.</td><td>9 мин.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section limits-section">
+      <div class="section-title">
+        <div>
+          <h2>Настройки ограничений ИИ</h2>
+          <p>Контроль близости к максимальной мощности обработки</p>
+        </div>
+      </div>
+      <div class="row g-3">
+        <div class="col-xl-5">
+          <div class="limit-panel h-100">
+            <div class="limit-heading">
+              <span>Использование максимальной мощности ИИ</span>
+              <b>78%</b>
+            </div>
+            <div class="progress limit-progress" role="progressbar" aria-label="Использование максимальной мощности ИИ" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar" style="width: 78%"></div>
+              <span class="progress-marker warning-marker" title="Порог предупреждения: 75%"></span>
+              <span class="progress-marker danger-marker" title="Критический порог: 90%"></span>
+            </div>
+            <div class="progress-labels"><span>0%</span><span>Предупреждение: 75%</span><span>Критично: 90%</span><span>100%</span></div>
+            <div class="row g-2 mt-3">
+              <div class="col-sm-4"><div class="limit-stat"><span>Текущая нагрузка</span><b>780</b><small>запросов/мин.</small></div></div>
+              <div class="col-sm-4"><div class="limit-stat"><span>Максимум</span><b>1 000</b><small>запросов/мин.</small></div></div>
+              <div class="col-sm-4"><div class="limit-stat"><span>Доступный резерв</span><b>220</b><small>запросов/мин.</small></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-7">
+          <form class="settings-panel">
+            <div class="row g-3">
+              <label class="col-md-6 form-label">Максимальная обработка запросов в минуту<input class="form-control form-control-sm" type="number" value="1000"></label>
+              <label class="col-md-6 form-label">Максимальный размер входящей очереди<input class="form-control form-control-sm" type="number" value="10000"></label>
+              <label class="col-md-6 form-label">Максимальный размер исходящей очереди<input class="form-control form-control-sm" type="number" value="5000"></label>
+              <label class="col-md-3 form-label">Порог предупреждения, %<input class="form-control form-control-sm" type="number" value="75"></label>
+              <label class="col-md-3 form-label">Критический порог, %<input class="form-control form-control-sm" type="number" value="90"></label>
+            </div>
+            <div class="settings-footer">
+              <small>Последнее изменение: 14.05.2026 12:15, пользователь: admin</small>
+              <button class="btn btn-primary btn-sm" type="button">Сохранить настройки</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
