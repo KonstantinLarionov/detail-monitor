@@ -141,22 +141,44 @@ Highcharts.chart('queues-chart', {
   ]
 });
 
-Highcharts.chart('queues-functional-chart', {
-  chart: { type: 'column' },
-  title: { text: null },
-  xAxis: { categories: hours, title: { text: 'Время' } },
-  yAxis: { title: { text: 'Элементы в очередях, шт.' }, min: 0 },
-  tooltip: { shared: true, valueSuffix: ' элементов' },
-  plotOptions: {
-    column: { stacking: 'normal', borderWidth: 0, borderRadius: 2 }
-  },
-  series: [
-    { name: '93: ответы и рекомендации', data: [470, 690, 980, 1310, 1730, 1520], color: palette.purple },
-    { name: '265: остальные сценарии', data: [310, 460, 650, 880, 1120, 860], color: palette.sky },
-    { name: 'Загрузка: общая и история', data: [180, 330, 560, 890, 1240, 540], color: palette.orange },
-    { name: 'Отмены', data: [60, 170, 190, 440, 720, 320], color: palette.red }
-  ]
-});
+function createTopicQueueChart(containerId, series) {
+  Highcharts.chart(containerId, {
+    chart: { type: 'column' },
+    title: { text: null },
+    xAxis: { categories: hours, title: { text: null } },
+    yAxis: { title: { text: 'Сообщения, шт.' }, min: 0 },
+    tooltip: { shared: true, valueSuffix: ' сообщений' },
+    plotOptions: {
+      column: { borderWidth: 0, borderRadius: 2, groupPadding: 0.16, pointPadding: 0.08 }
+    },
+    legend: { enabled: series.length > 1 },
+    series
+  });
+}
+
+createTopicQueueChart('queue-rating-chart', [
+  { name: 'RATING.IN', data: [420, 650, 930, 1280, 1760, 1520], color: palette.purple },
+  { name: 'RATING.OUT', data: [350, 520, 760, 990, 1410, 1210], color: palette.sky }
+]);
+
+createTopicQueueChart('queue-problems-chart', [
+  { name: 'PROBLEMS.IN', data: [90, 170, 260, 440, 710, 440], color: palette.purple },
+  { name: 'PROBLEMS.OUT', data: [40, 100, 180, 310, 520, 360], color: palette.sky }
+]);
+
+createTopicQueueChart('queue-search-chart', [
+  { name: 'SEARCH.IN', data: [130, 240, 360, 620, 930, 620], color: palette.purple },
+  { name: 'SEARCH.OUT', data: [80, 160, 270, 460, 740, 510], color: palette.sky }
+]);
+
+createTopicQueueChart('queue-history-chart', [
+  { name: 'HISTORY.IN', data: [180, 330, 560, 890, 1240, 540], color: palette.orange }
+]);
+
+createTopicQueueChart('queue-cancel-chart', [
+  { name: 'CANCEL.IN', data: [60, 90, 120, 180, 260, 120], color: palette.red },
+  { name: 'CANCEL.OUT', data: [20, 35, 50, 80, 110, 50], color: palette.sky }
+]);
 
 document.getElementById('frequency-table').innerHTML = hours.map((hour, index) => {
   const errorShare = (frequency.errors[index] / frequency.all[index] * 100).toFixed(2).replace('.', ',');

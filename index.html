@@ -199,8 +199,34 @@
         <div id="queues-chart" class="chart chart-medium"></div>
       </div>
       <div class="chart-panel mt-3">
-        <div class="table-title chart-subtitle">Очереди по функциональным группам</div>
-        <div id="queues-functional-chart" class="chart chart-medium"></div>
+        <div class="table-title chart-subtitle">Почасовая детализация обмена по сценариям</div>
+        <div class="topic-chart-grid">
+          <div class="topic-chart-card">
+            <h3>93: ответы и рекомендации</h3>
+            <p>MOSEDO_AI.RATING.IN → MOSEDO_AI.RATING.OUT</p>
+            <div id="queue-rating-chart" class="chart topic-chart"></div>
+          </div>
+          <div class="topic-chart-card">
+            <h3>265: отчеты по категориям</h3>
+            <p>MOSEDO_AI.PROBLEMS.IN → MOSEDO_AI.PROBLEMS.OUT</p>
+            <div id="queue-problems-chart" class="chart topic-chart"></div>
+          </div>
+          <div class="topic-chart-card">
+            <h3>265: поиск по ключевым словам</h3>
+            <p>MOSEDO_AI.SEARCH.IN → MOSEDO_AI.SEARCH.OUT</p>
+            <div id="queue-search-chart" class="chart topic-chart"></div>
+          </div>
+          <div class="topic-chart-card">
+            <h3>Загрузка истории</h3>
+            <p>MOSEDO_AI.HISTORY.IN</p>
+            <div id="queue-history-chart" class="chart topic-chart"></div>
+          </div>
+          <div class="topic-chart-card">
+            <h3>Отмены</h3>
+            <p>MOSEDO_AI.CANCEL.IN → MOSEDO_AI.CANCEL.OUT</p>
+            <div id="queue-cancel-chart" class="chart topic-chart"></div>
+          </div>
+        </div>
       </div>
       <div class="table-panel">
         <div class="table-title">

@@ -284,6 +284,36 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
 .queue-capacity-panel p { margin-top: 4px; }
 .queue-capacity-progress .progress-bar { background: var(--sky); }
 .chart-subtitle { margin: -10px -10px 8px; }
+
+.topic-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  padding: 2px;
+}
+
+.topic-chart-card {
+  border: 1px solid #e1e7eb;
+  border-radius: 3px;
+  background: #fff;
+}
+
+.topic-chart-card:last-child { grid-column: 1 / -1; }
+
+.topic-chart-card h3 {
+  margin: 12px 12px 0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.topic-chart-card p {
+  margin: 4px 12px 0;
+  font-size: 11px;
+}
+
+.topic-chart {
+  height: 240px;
+}
 .limit-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .limit-heading span { font-weight: 700; }
 .limit-heading b { color: var(--yellow); font-size: 28px; }
@@ -310,4 +340,6 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
   .filter-control input, .filter-control select, .inline-select select { width: 100%; }
   .chart-medium { height: 300px; }
   .settings-footer { align-items: stretch; flex-direction: column; }
+  .topic-chart-grid { grid-template-columns: 1fr; }
+  .topic-chart-card:last-child { grid-column: auto; }
 }
