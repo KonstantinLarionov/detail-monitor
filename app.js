@@ -196,27 +196,14 @@ function escapeCsvCell(value) {
   return `"${normalized.replace(/"/g, '""')}"`;
 }
 
-const exportedTables = [
-  { title: 'Детализация частоты обращений', id: 'frequency-details-table' },
-  { title: 'Ресурсы за выбранный период', id: 'resources-details-table' },
-  { title: 'Интерфейсы ИИ за выбранный период', id: 'endpoints-details-table' },
-  { title: 'Состояние очередей', id: 'queues-details-table' }
-];
+function exportTableToCsv(tableId, fileName) {
+  const table = document.getElementById(tableId);
+  if (!table) return;
 
-function exportAllTablesToCsv() {
-  const rows = [];
-
-  exportedTables.forEach(({ title, id }, index) => {
-    const table = document.getElementById(id);
-    if (!table) return;
-
-    if (index > 0) rows.push('');
-    rows.push(escapeCsvCell(title));
-    Array.from(table.querySelectorAll('tr')).forEach((row) => {
-      rows.push(Array.from(row.querySelectorAll('th, td'))
-        .map((cell) => escapeCsvCell(cell.textContent))
-        .join(';'));
-    });
+  const rows = Array.from(table.querySelectorAll('tr')).map((row) => {
+    return Array.from(row.querySelectorAll('th, td'))
+      .map((cell) => escapeCsvCell(cell.textContent))
+      .join(';');
   });
 
   const blob = new Blob([`\uFEFF${rows.join('\r\n')}`], {
@@ -225,14 +212,18 @@ function exportAllTablesToCsv() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = 'ai-monitoring-details.csv';
+  link.download = fileName;
   document.body.appendChild(link);
   link.click();
   link.remove();
   URL.revokeObjectURL(url);
 }
 
-document.getElementById('export-all-tables').addEventListener('click', exportAllTablesToCsv);
+document.querySelectorAll('[data-export-table]').forEach((button) => {
+  button.addEventListener('click', () => {
+    exportTableToCsv(button.dataset.exportTable, button.dataset.exportFile);
+  });
+});
 
 function normalizeSortValue(value) {
   const compact = value.replace(/\s/g, '').replace(',', '.');
