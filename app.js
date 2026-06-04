@@ -80,7 +80,7 @@ function renderFlkTable(check = 'all', result = 'all') {
   const body = document.getElementById('flk-table-body');
   const checkText = check === 'all' ? 'всем проверкам' : check;
   const resultText = result === 'all' ? 'всем результатам' : result.toLowerCase();
-  title.textContent = `Объекты ФЛК за сутки по ${checkText} и ${resultText}`;
+  title.textContent = `Объекты доступности к выгрузке по ${checkText} и ${resultText}`;
   body.innerHTML = rows.map((item) => {
     const resultClass = item.result === 'Не прошел ФЛК' ? ' class="danger-text"' : '';
     return `<tr>
@@ -112,7 +112,7 @@ Highcharts.chart('flk-day-chart', {
       point: {
         events: {
           click() {
-            const result = this.series.name === 'Не прошли ФЛК' ? 'Не прошел ФЛК' : 'Прошел ФЛК';
+            const result = this.series.name === 'Недоступно для выгрузки' ? 'Не прошел ФЛК' : 'Прошел ФЛК';
             renderFlkTable(this.category, result);
           }
         }
@@ -120,8 +120,8 @@ Highcharts.chart('flk-day-chart', {
     }
   },
   series: [
-    { name: 'Прошли ФЛК', data: [18742, 17302, 17118], color: palette.sky },
-    { name: 'Не прошли ФЛК', data: [158, 78, 52], color: palette.red }
+    { name: 'Доступно для выгрузки', data: [18742, 17302, 17118], color: palette.sky },
+    { name: 'Недоступно для выгрузки', data: [158, 78, 52], color: palette.red }
   ]
 });
 renderFlkTable();
@@ -182,7 +182,7 @@ function renderEndpointTable(queueFilter = 'all', speedBucket = 'all') {
   });
   const title = document.getElementById('endpoints-table-title');
   const body = document.getElementById('endpoints-table-body');
-  const queueText = queueFilter === 'all' ? 'всем очередям' : queueFilter;
+  const queueText = queueFilter === 'all' ? 'всем сценариям' : queueFilter;
   const speedText = speedBucket === 'all' ? 'всем скоростям' : `скорости ${speedBucket} сообщ./мин.`;
   title.textContent = `Обращения по ${queueText} и ${speedText}`;
   body.innerHTML = rows.length ? rows.map((item) => {
@@ -253,7 +253,7 @@ renderEndpointTable();
 
 const queueBalanceData = {
   all: {
-    title: 'Все очереди',
+    title: 'Все сценарии',
     sent: [1020, 1650, 2380, 3520, 4810, 3240],
     returned: [860, 1320, 2010, 2760, 3890, 2870],
     pending: [160, 490, 860, 1620, 2540, 2910]
@@ -361,9 +361,9 @@ function updateQueueBalanceChart(key) {
   while (queueBalanceChart.series.length) {
     queueBalanceChart.series[0].remove(false);
   }
-  queueBalanceChart.addSeries({ name: `${data.title}: улетело от нас в ИИ`, type: 'column', data: data.sent, color: palette.purple, tooltip: { valueSuffix: ' шт.' } }, false);
-  queueBalanceChart.addSeries({ name: `${data.title}: ИИ вернуло`, type: 'column', data: data.returned, color: palette.sky, tooltip: { valueSuffix: ' шт.' } }, false);
-  queueBalanceChart.addSeries({ name: `${data.title}: висит в обработке`, type: 'column', data: data.pending, color: palette.orange, tooltip: { valueSuffix: ' шт.' } }, false);
+  queueBalanceChart.addSeries({ name: `${data.title}: передано в ИИ`, type: 'column', data: data.sent, color: palette.purple, tooltip: { valueSuffix: ' шт.' } }, false);
+  queueBalanceChart.addSeries({ name: `${data.title}: обработано ИИ`, type: 'column', data: data.returned, color: palette.sky, tooltip: { valueSuffix: ' шт.' } }, false);
+  queueBalanceChart.addSeries({ name: `${data.title}: остаток обработки`, type: 'column', data: data.pending, color: palette.orange, tooltip: { valueSuffix: ' шт.' } }, false);
   queueBalanceChart.redraw();
 }
 
@@ -388,22 +388,22 @@ function createTopicQueueChart(containerId, series) {
 }
 
 createTopicQueueChart('queue-rating-chart', [
-  { name: 'RATING.IN', data: [420, 650, 930, 1280, 1760, 1520], color: palette.purple },
-  { name: 'RATING.OUT', data: [350, 520, 760, 990, 1410, 1210], color: palette.sky }
+  { name: 'Передано в ИИ', data: [420, 650, 930, 1280, 1760, 1520], color: palette.purple },
+  { name: 'Обработано ИИ', data: [350, 520, 760, 990, 1410, 1210], color: palette.sky }
 ]);
 
 createTopicQueueChart('queue-problems-chart', [
-  { name: 'PROBLEMS.IN', data: [90, 170, 260, 440, 710, 440], color: palette.purple },
-  { name: 'PROBLEMS.OUT', data: [40, 100, 180, 310, 520, 360], color: palette.sky }
+  { name: 'Передано в ИИ', data: [90, 170, 260, 440, 710, 440], color: palette.purple },
+  { name: 'Обработано ИИ', data: [40, 100, 180, 310, 520, 360], color: palette.sky }
 ]);
 
 createTopicQueueChart('queue-search-chart', [
-  { name: 'SEARCH.IN', data: [130, 240, 360, 620, 930, 620], color: palette.purple },
-  { name: 'SEARCH.OUT', data: [80, 160, 270, 460, 740, 510], color: palette.sky }
+  { name: 'Передано в ИИ', data: [130, 240, 360, 620, 930, 620], color: palette.purple },
+  { name: 'Обработано ИИ', data: [80, 160, 270, 460, 740, 510], color: palette.sky }
 ]);
 
 createTopicQueueChart('queue-history-chart', [
-  { name: 'HISTORY.IN', data: [180, 330, 560, 890, 1240, 540], color: palette.orange }
+  { name: 'Передано в ИИ', data: [180, 330, 560, 890, 1240, 540], color: palette.orange }
 ]);
 
 Highcharts.chart('workers-priority-chart', {
@@ -416,9 +416,9 @@ Highcharts.chart('workers-priority-chart', {
     column: { stacking: 'normal', borderWidth: 0, borderRadius: 2, groupPadding: 0.2, pointPadding: 0.08 }
   },
   series: [
-    { name: 'Актуальные за последние 7 дней', data: [12480, 0, 0], color: palette.purple },
-    { name: 'Пропуски свежих данных прошлого периода', data: [0, 3260, 0], color: palette.sky },
-    { name: 'Исторические данные', data: [0, 0, 8940], color: palette.orange }
+    { name: 'Актуальные объекты за последние 7 дней', data: [12480, 0, 0], color: palette.purple },
+    { name: 'Пропуски передачи за прошлый период', data: [0, 3260, 0], color: palette.sky },
+    { name: 'Исторический остаток', data: [0, 0, 8940], color: palette.orange }
   ]
 });
 

@@ -80,8 +80,8 @@
     <section class="content-section">
       <div class="section-title">
         <div>
-          <h2>ФЛК за сутки</h2>
-          <p>Результаты форматно-логического контроля входящих сообщений за последний день</p>
+          <h2>Контроль доступности объектов к выгрузке в ИИ</h2>
+          <p>Проверка, какие обращения и ответы могут быть переданы в ИИ по результату ФЛК</p>
         </div>
       </div>
       <div class="chart-panel">
@@ -89,7 +89,7 @@
       </div>
       <div class="table-panel">
         <div class="table-title">
-          <span id="flk-table-title">Объекты ФЛК за сутки</span>
+          <span id="flk-table-title">Объекты по результату ФЛК за сутки</span>
           <button class="btn btn-light btn-sm export-button" type="button" data-export-table="flk-day-table" data-export-file="flk-day.csv">Экспорт CSV</button>
         </div>
         <div class="table-responsive">
@@ -103,71 +103,25 @@
       </div>
     </section>
 
-    <section class="content-section">
-      <div class="section-title">
-        <div>
-          <h2>Нагрузка на endpoints ИИ</h2>
-          <p>Бары по очередям: по оси X отображается скорость обработки, по оси Y — количество обращений</p>
-        </div>
-        <label class="inline-select">
-          <span>Очередь</span>
-          <select class="form-select form-select-sm" id="endpoint-queue-filter">
-            <option value="all">Все очереди</option>
-            <option value="1023 REST API">1023 REST API</option>
-            <option value="93 ответы и рекомендации">93 ответы и рекомендации</option>
-            <option value="265 остальные сценарии">265 остальные сценарии</option>
-          </select>
-        </label>
-      </div>
-      <div class="chart-panel">
-        <div id="endpoints-chart" class="chart chart-medium"></div>
-      </div>
-      <div class="table-panel">
-        <div class="table-title">
-          <span id="endpoints-table-title">Обращения по всем очередям и скоростям</span>
-          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="endpoints-details-table" data-export-file="endpoints-details.csv">Экспорт CSV</button>
-        </div>
-        <div class="table-responsive">
-          <table id="endpoints-details-table" class="table table-sm monitoring-table mb-0">
-            <thead>
-              <tr><th>ID обращения</th><th>Группа</th><th>Пара топиков / endpoint</th><th>Функциональный блок</th><th>Время ответа</th><th>Статус</th></tr>
-            </thead>
-            <tbody id="endpoints-table-body"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
     <section class="content-section mb-4">
       <div class="section-title">
         <div>
-          <h2>Загрузка очередей ИИ: вход / выход</h2>
-          <p>Размер очередей и скорость обработки сообщений</p>
+          <h2>Контроль передачи и обработки объектов в ИИ</h2>
+          <p>Связь со сводными рядами: передано в ИИ, обработано ИИ, остаток обработки и ошибки</p>
         </div>
       </div>
       <div class="chart-panel">
         <div class="table-title chart-subtitle">
-          <span>Баланс обмена с ИИ по очередям</span>
+          <span>Передано / обработано / остаток по сценариям</span>
           <label class="inline-select queue-balance-select">
-            <span>Очередь</span>
+            <span>Сценарий</span>
             <select class="form-select form-select-sm" id="queue-balance-topic">
-              <option value="all">Все очереди</option>
+              <option value="all">Все сценарии</option>
               <optgroup label="Сценарии обмена">
                 <option value="rating">93: MOSEDO_AI.RATING</option>
                 <option value="problems">265: MOSEDO_AI.PROBLEMS</option>
                 <option value="search">265: MOSEDO_AI.SEARCH</option>
                 <option value="history">Загрузка: MOSEDO_AI.HISTORY</option>
-              </optgroup>
-              <optgroup label="Физические очереди">
-                <option value="ratingIn">MOSEDO_AI.RATING.IN</option>
-                <option value="ratingOut">MOSEDO_AI.RATING.OUT</option>
-                <option value="problemsIn">MOSEDO_AI.PROBLEMS.IN</option>
-                <option value="problemsOut">MOSEDO_AI.PROBLEMS.OUT</option>
-                <option value="searchIn">MOSEDO_AI.SEARCH.IN</option>
-                <option value="searchOut">MOSEDO_AI.SEARCH.OUT</option>
-                <option value="historyIn">MOSEDO_AI.HISTORY.IN</option>
-                <option value="cancelIn">MOSEDO_AI.CANCEL.IN</option>
-                <option value="cancelOut">MOSEDO_AI.CANCEL.OUT</option>
               </optgroup>
             </select>
           </label>
@@ -175,7 +129,7 @@
         <div id="queue-exchange-balance-chart" class="chart chart-medium"></div>
       </div>
       <div class="chart-panel mt-3">
-        <div class="table-title chart-subtitle">Почасовая детализация обмена по сценариям</div>
+        <div class="table-title chart-subtitle">Почасовая детализация передачи и обработки по сценариям</div>
         <div class="topic-chart-grid">
           <div class="topic-chart-card">
             <h3>93: ответы и рекомендации</h3>
@@ -220,13 +174,13 @@
         </div>
       </div>
       <div class="chart-panel mt-3">
-        <div class="table-title chart-subtitle">Отправка по приоритетам воркеров за последний день</div>
-        <p class="chart-note">Срез показывает, какие задачи реально ушли в ИИ: актуальные обращения за последние 7 дней, пропуски свежих данных прошлого периода до последней обработанной даты и исторические данные.</p>
+        <div class="table-title chart-subtitle">Очередность догрузки данных по приоритетам</div>
+        <p class="chart-note">Срез показывает, какие объекты передаются в первую очередь: актуальные данные, пропуски передачи за прошлый период и исторический остаток.</p>
         <div id="workers-priority-chart" class="chart chart-medium"></div>
       </div>
       <div class="table-panel">
         <div class="table-title">
-          <span>Приоритеты обработки за последний день</span>
+          <span>Приоритеты передачи объектов в ИИ за последний день</span>
           <button class="btn btn-light btn-sm export-button" type="button" data-export-table="workers-priority-table" data-export-file="workers-priority.csv">Экспорт CSV</button>
         </div>
         <div class="table-responsive">
@@ -247,12 +201,47 @@
     <section class="content-section limits-section">
       <div class="section-title">
         <div>
-          <h2>Использование часового лимита обработки по парам топиков за сутки</h2>
-          <p>Сколько объектов обработано за каждый час: от отправки в IN до получения результата из OUT</p>
+          <h2>Использование часового лимита обработки объектов ИИ</h2>
+          <p>Контроль близости к лимиту обработки по бизнес-сценариям за сутки</p>
         </div>
       </div>
       <div class="chart-panel">
         <div id="hourly-limit-chart" class="chart chart-medium"></div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <div class="section-title">
+        <div>
+          <h2>Техническая скорость обработки запросов ИИ</h2>
+          <p>Дополнительная диагностика после проверки передачи данных: распределение обращений по диапазонам скорости обработки</p>
+        </div>
+        <label class="inline-select">
+          <span>Сценарий</span>
+          <select class="form-select form-select-sm" id="endpoint-queue-filter">
+            <option value="all">Все сценарии</option>
+            <option value="1023 REST API">1023 REST API</option>
+            <option value="93 ответы и рекомендации">93 ответы и рекомендации</option>
+            <option value="265 остальные сценарии">265 остальные сценарии</option>
+          </select>
+        </label>
+      </div>
+      <div class="chart-panel">
+        <div id="endpoints-chart" class="chart chart-medium"></div>
+      </div>
+      <div class="table-panel">
+        <div class="table-title">
+          <span id="endpoints-table-title">Обращения по всем сценариям и скоростям</span>
+          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="endpoints-details-table" data-export-file="endpoints-details.csv">Экспорт CSV</button>
+        </div>
+        <div class="table-responsive">
+          <table id="endpoints-details-table" class="table table-sm monitoring-table mb-0">
+            <thead>
+              <tr><th>ID обращения</th><th>Группа</th><th>Пара топиков / endpoint</th><th>Функциональный блок</th><th>Время ответа</th><th>Статус</th></tr>
+            </thead>
+            <tbody id="endpoints-table-body"></tbody>
+          </table>
+        </div>
       </div>
     </section>
 
