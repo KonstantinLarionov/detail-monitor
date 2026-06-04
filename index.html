@@ -111,24 +111,6 @@
         </div>
       </div>
       <div class="chart-panel">
-        <div class="table-title chart-subtitle">
-          <span>Передано / обработано / остаток по сценариям</span>
-          <label class="inline-select queue-balance-select">
-            <span>Сценарий</span>
-            <select class="form-select form-select-sm" id="queue-balance-topic">
-              <option value="all">Все сценарии</option>
-              <optgroup label="Сценарии обмена">
-                <option value="rating">93: MOSEDO_AI.RATING</option>
-                <option value="problems">265: MOSEDO_AI.PROBLEMS</option>
-                <option value="search">265: MOSEDO_AI.SEARCH</option>
-                <option value="history">Загрузка: MOSEDO_AI.HISTORY</option>
-              </optgroup>
-            </select>
-          </label>
-        </div>
-        <div id="queue-exchange-balance-chart" class="chart chart-medium"></div>
-      </div>
-      <div class="chart-panel mt-3">
         <div class="table-title chart-subtitle">Почасовая детализация передачи и обработки по сценариям</div>
         <div class="topic-chart-grid">
           <div class="topic-chart-card">
@@ -214,7 +196,7 @@
       <div class="section-title">
         <div>
           <h2>Техническая скорость обработки запросов ИИ</h2>
-          <p>Дополнительная диагностика после проверки передачи данных: распределение обращений по диапазонам скорости обработки</p>
+          <p>Дополнительная диагностика после проверки передачи данных: столбцы показывают количество обращений по диапазонам скорости обработки</p>
         </div>
         <label class="inline-select">
           <span>Сценарий</span>

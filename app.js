@@ -126,7 +126,6 @@ Highcharts.chart('flk-day-chart', {
 });
 renderFlkTable();
 
-const speedBuckets = ['до 50', '50-100', '100-150', '150+'];
 const endpointRequests = [
   { id: '77018421', group: '1023', queue: '1023 REST API', endpoint: 'POST /rate', feature: 'Оценка ответа', speed: 264, time: '1,8 сек.', status: 'Успешно' },
   { id: '77018422', group: '1023', queue: '1023 REST API', endpoint: 'POST /wordcloud', feature: 'Тематический поиск', speed: 171, time: '1,1 сек.', status: 'Успешно' },
@@ -156,6 +155,12 @@ const endpointRequests = [
   { id: '77018446', group: '265', queue: '265 остальные сценарии', endpoint: 'MOSEDO_AI.HISTORY', feature: 'Загрузка исторических данных', speed: 72, time: '7,1 сек.', status: 'Успешно' }
 ];
 
+function getHourlySpeed(speedPerMinute) {
+  return Math.round((speedPerMinute * 60) / 1000) * 1000;
+}
+
+const speedBuckets = ['до 50', '50-100', '100-150', '150+'];
+
 function getSpeedBucket(speed) {
   if (speed < 50) return 'до 50';
   if (speed < 100) return '50-100';
@@ -169,7 +174,9 @@ function getEndpointChartSeries(queueFilter = 'all') {
     .filter((queue) => queueFilter === 'all' || queue === queueFilter)
     .map((queue) => ({
       name: queue,
-      data: speedBuckets.map((bucket) => endpointRequests.filter((item) => item.queue === queue && getSpeedBucket(item.speed) === bucket).length),
+      data: speedBuckets.map((bucket) => {
+        return endpointRequests.filter((item) => item.queue === queue && getSpeedBucket(item.speed) === bucket).length;
+      }),
       color: queue === '1023 REST API' ? palette.purple : queue === '93 ответы и рекомендации' ? palette.orange : palette.sky
     }));
 }
@@ -208,11 +215,11 @@ const endpointsChart = Highcharts.chart('endpoints-chart', {
     categories: speedBuckets,
     title: { text: 'Скорость обработки, сообщ./мин.' }
   },
-  yAxis: { title: { text: 'Количество обращений, шт.' }, min: 0 },
+  yAxis: { title: { text: 'Количество обращений, шт.' }, min: 0, allowDecimals: false },
   tooltip: {
     shared: true,
     formatter() {
-      return `<b>${this.x}</b><br>${this.points.map((point) => {
+      return `<b>${this.x} сообщ./мин.</b><br>${this.points.map((point) => {
         return `<span style="color:${point.color}">●</span> ${point.series.name}: <b>${Highcharts.numberFormat(point.y, 0)} обращений</b>`;
       }).join('<br>')}`;
     }
@@ -250,127 +257,6 @@ document.getElementById('endpoint-queue-filter').addEventListener('change', (eve
   renderEndpointTable(selectedEndpointQueue, selectedEndpointSpeed);
 });
 renderEndpointTable();
-
-const queueBalanceData = {
-  all: {
-    title: 'Все сценарии',
-    sent: [1020, 1650, 2380, 3520, 4810, 3240],
-    returned: [860, 1320, 2010, 2760, 3890, 2870],
-    pending: [160, 490, 860, 1620, 2540, 2910]
-  },
-  rating: {
-    title: '93: MOSEDO_AI.RATING',
-    sent: [420, 650, 930, 1280, 1760, 1520],
-    returned: [350, 520, 760, 990, 1410, 1210],
-    pending: [70, 200, 370, 660, 1010, 1320]
-  },
-  ratingIn: {
-    title: 'MOSEDO_AI.RATING.IN',
-    sent: [420, 650, 930, 1280, 1760, 1520],
-    returned: [350, 520, 760, 990, 1410, 1210],
-    pending: [70, 200, 370, 660, 1010, 1320]
-  },
-  ratingOut: {
-    title: 'MOSEDO_AI.RATING.OUT',
-    sent: [420, 650, 930, 1280, 1760, 1520],
-    returned: [350, 520, 760, 990, 1410, 1210],
-    pending: [20, 45, 80, 130, 210, 210]
-  },
-  problems: {
-    title: '265: MOSEDO_AI.PROBLEMS',
-    sent: [90, 170, 260, 440, 710, 440],
-    returned: [40, 100, 180, 310, 520, 360],
-    pending: [50, 120, 200, 330, 520, 600]
-  },
-  problemsIn: {
-    title: 'MOSEDO_AI.PROBLEMS.IN',
-    sent: [90, 170, 260, 440, 710, 440],
-    returned: [40, 100, 180, 310, 520, 360],
-    pending: [50, 120, 200, 330, 520, 440]
-  },
-  problemsOut: {
-    title: 'MOSEDO_AI.PROBLEMS.OUT',
-    sent: [90, 170, 260, 440, 710, 440],
-    returned: [40, 100, 180, 310, 520, 360],
-    pending: [8, 18, 34, 56, 92, 65]
-  },
-  search: {
-    title: '265: MOSEDO_AI.SEARCH',
-    sent: [130, 240, 360, 620, 930, 620],
-    returned: [80, 160, 270, 460, 740, 510],
-    pending: [50, 130, 220, 380, 570, 680]
-  },
-  searchIn: {
-    title: 'MOSEDO_AI.SEARCH.IN',
-    sent: [130, 240, 360, 620, 930, 620],
-    returned: [80, 160, 270, 460, 740, 510],
-    pending: [50, 130, 220, 380, 570, 620]
-  },
-  searchOut: {
-    title: 'MOSEDO_AI.SEARCH.OUT',
-    sent: [130, 240, 360, 620, 930, 620],
-    returned: [80, 160, 270, 460, 740, 510],
-    pending: [12, 26, 42, 70, 120, 95]
-  },
-  history: {
-    title: 'Загрузка: MOSEDO_AI.HISTORY',
-    sent: [180, 330, 560, 890, 1240, 540],
-    returned: [150, 280, 490, 760, 1060, 470],
-    pending: [30, 80, 150, 280, 460, 530]
-  },
-  historyIn: {
-    title: 'MOSEDO_AI.HISTORY.IN',
-    sent: [180, 330, 560, 890, 1240, 540],
-    returned: [150, 280, 490, 760, 1060, 470],
-    pending: [30, 80, 150, 280, 460, 540]
-  },
-  cancel: {
-    title: 'Отмены: MOSEDO_AI.CANCEL',
-    sent: [60, 90, 120, 180, 260, 120],
-    returned: [20, 35, 50, 80, 110, 50],
-    pending: [40, 95, 165, 265, 415, 485]
-  },
-  cancelIn: {
-    title: 'MOSEDO_AI.CANCEL.IN',
-    sent: [60, 90, 120, 180, 260, 120],
-    returned: [20, 35, 50, 80, 110, 50],
-    pending: [40, 95, 165, 265, 415, 120]
-  },
-  cancelOut: {
-    title: 'MOSEDO_AI.CANCEL.OUT',
-    sent: [60, 90, 120, 180, 260, 120],
-    returned: [20, 35, 50, 80, 110, 50],
-    pending: [6, 12, 20, 36, 58, 50]
-  }
-};
-
-const queueBalanceChart = Highcharts.chart('queue-exchange-balance-chart', {
-  chart: { type: 'column' },
-  title: { text: null },
-  xAxis: { categories: hours, crosshair: true, title: { text: 'Время' } },
-  yAxis: { title: { text: 'Сообщения, шт.' }, min: 0 },
-  tooltip: { shared: true },
-  plotOptions: {
-    column: { borderWidth: 0, borderRadius: 2, groupPadding: 0.18, pointPadding: 0.08 }
-  },
-  series: []
-});
-
-function updateQueueBalanceChart(key) {
-  const data = queueBalanceData[key];
-  while (queueBalanceChart.series.length) {
-    queueBalanceChart.series[0].remove(false);
-  }
-  queueBalanceChart.addSeries({ name: `${data.title}: передано в ИИ`, type: 'column', data: data.sent, color: palette.purple, tooltip: { valueSuffix: ' шт.' } }, false);
-  queueBalanceChart.addSeries({ name: `${data.title}: обработано ИИ`, type: 'column', data: data.returned, color: palette.sky, tooltip: { valueSuffix: ' шт.' } }, false);
-  queueBalanceChart.addSeries({ name: `${data.title}: остаток обработки`, type: 'column', data: data.pending, color: palette.orange, tooltip: { valueSuffix: ' шт.' } }, false);
-  queueBalanceChart.redraw();
-}
-
-document.getElementById('queue-balance-topic').addEventListener('change', (event) => {
-  updateQueueBalanceChart(event.target.value);
-});
-updateQueueBalanceChart('all');
 
 function createTopicQueueChart(containerId, series) {
   Highcharts.chart(containerId, {
