@@ -80,62 +80,24 @@
     <section class="content-section">
       <div class="section-title">
         <div>
-          <h2>Частота обращений к сервису ИИ</h2>
-          <p>Количество запросов, успешных обработок и ошибок по временным интервалам</p>
+          <h2>ФЛК за сутки</h2>
+          <p>Результаты форматно-логического контроля входящих сообщений за последний день</p>
         </div>
-        <span class="status-badge status-ok">Нагрузка допустима</span>
       </div>
       <div class="chart-panel">
-        <div id="frequency-chart" class="chart chart-medium"></div>
+        <div id="flk-day-chart" class="chart chart-small"></div>
       </div>
       <div class="table-panel">
         <div class="table-title">
-          <span>Детализация частоты обращений</span>
-          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="frequency-details-table" data-export-file="frequency-details.csv">Экспорт CSV</button>
+          <span id="flk-table-title">Объекты ФЛК за сутки</span>
+          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="flk-day-table" data-export-file="flk-day.csv">Экспорт CSV</button>
         </div>
         <div class="table-responsive">
-          <table id="frequency-details-table" class="table table-sm monitoring-table mb-0">
+          <table id="flk-day-table" class="table table-sm monitoring-table mb-0">
             <thead>
-              <tr><th>Интервал</th><th>Всего запросов</th><th>Успешно обработано</th><th>Ошибки</th><th>Доля ошибок</th></tr>
+              <tr><th>ID обращения</th><th>ID ответа</th><th>Тип объекта</th><th>Проверка</th><th>Результат ФЛК</th><th>Причина</th><th>Время проверки</th></tr>
             </thead>
-            <tbody id="frequency-table"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section class="content-section">
-      <div class="section-title">
-        <div>
-          <h2>Загрузка ресурсов</h2>
-          <p>Количество запросов и длительность обработки ИИ</p>
-        </div>
-        <label class="inline-select">
-          <span>Ресурс</span>
-          <select class="form-select form-select-sm">
-            <option>Все ресурсы</option>
-            <option>Обработка обращений</option>
-            <option>Обработка ответов</option>
-          </select>
-        </label>
-      </div>
-      <div class="chart-panel">
-        <div id="resources-chart" class="chart chart-medium"></div>
-      </div>
-      <div class="table-panel">
-        <div class="table-title">
-          <span>Ресурсы за выбранный период</span>
-          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="resources-details-table" data-export-file="resources-details.csv">Экспорт CSV</button>
-        </div>
-        <div class="table-responsive">
-          <table id="resources-details-table" class="table table-sm monitoring-table mb-0">
-            <thead>
-              <tr><th>Ресурс</th><th>Запросы</th><th>Успешно</th><th>Ошибки</th><th>Среднее время</th><th>95-й перцентиль</th><th>Максимум</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Обработка обращений</td><td>12 450</td><td>12 310</td><td class="danger-text">140</td><td>1,8 сек.</td><td>3,7 сек.</td><td>12 сек.</td></tr>
-              <tr><td>Обработка ответов</td><td>8 720</td><td>8 701</td><td>19</td><td>0,9 сек.</td><td>2,1 сек.</td><td>7 сек.</td></tr>
-            </tbody>
+            <tbody id="flk-table-body"></tbody>
           </table>
         </div>
       </div>
@@ -145,13 +107,15 @@
       <div class="section-title">
         <div>
           <h2>Нагрузка на endpoints ИИ</h2>
-          <p>График сгруппирован по направлениям 1023, 93 и 265, таблица содержит детализацию по интерфейсам сервиса</p>
+          <p>Бары по очередям: по оси X отображается скорость обработки, по оси Y — количество обращений</p>
         </div>
         <label class="inline-select">
-          <span>Показатель</span>
-          <select class="form-select form-select-sm">
-            <option>Запросы в минуту</option>
-            <option>Среднее время ответа</option>
+          <span>Очередь</span>
+          <select class="form-select form-select-sm" id="endpoint-queue-filter">
+            <option value="all">Все очереди</option>
+            <option value="1023 REST API">1023 REST API</option>
+            <option value="93 ответы и рекомендации">93 ответы и рекомендации</option>
+            <option value="265 остальные сценарии">265 остальные сценарии</option>
           </select>
         </label>
       </div>
@@ -160,24 +124,15 @@
       </div>
       <div class="table-panel">
         <div class="table-title">
-          <span>Интерфейсы ИИ за выбранный период</span>
+          <span id="endpoints-table-title">Обращения по всем очередям и скоростям</span>
           <button class="btn btn-light btn-sm export-button" type="button" data-export-table="endpoints-details-table" data-export-file="endpoints-details.csv">Экспорт CSV</button>
         </div>
         <div class="table-responsive">
           <table id="endpoints-details-table" class="table table-sm monitoring-table mb-0">
             <thead>
-              <tr><th>Группа</th><th>Функциональный блок</th><th>Интерфейс</th><th>Протокол</th><th>Всего</th><th>Ошибки</th><th>Среднее время</th></tr>
+              <tr><th>ID обращения</th><th>Группа</th><th>Пара топиков / endpoint</th><th>Функциональный блок</th><th>Время ответа</th><th>Статус</th></tr>
             </thead>
-            <tbody>
-              <tr><td><b>1023</b></td><td>Оценка ответа</td><td><b>POST</b> /rate</td><td>REST API</td><td>6 000</td><td class="danger-text">54</td><td>1,8 сек.</td></tr>
-              <tr><td><b>1023</b></td><td>Тематический поиск</td><td><b>POST</b> /wordcloud</td><td>REST API</td><td>4 490</td><td>33</td><td>1,1 сек.</td></tr>
-              <tr><td><b>1023</b></td><td>Отмена сообщений в очереди</td><td><b>POST</b> /cancel</td><td>REST API</td><td>1 040</td><td>12</td><td>0,8 сек.</td></tr>
-              <tr><td><b>93</b></td><td>Отправка ответов, оценка и рекомендации</td><td>MOSEDO_AI.RATING.IN → OUT</td><td>RabbitMQ</td><td>10 950</td><td class="danger-text">96</td><td>4,2 сек.</td></tr>
-              <tr><td><b>265</b></td><td>Загрузка исторических данных</td><td>MOSEDO_AI.HISTORY.IN → RATING.OUT</td><td>RabbitMQ</td><td>3 940</td><td>21</td><td>7,6 сек.</td></tr>
-              <tr><td><b>265</b></td><td>Анализ проблем</td><td>MOSEDO_AI.PROBLEMS.IN → OUT</td><td>RabbitMQ</td><td>1 810</td><td>17</td><td>9,4 сек.</td></tr>
-              <tr><td><b>265</b></td><td>Контекстный поиск</td><td>MOSEDO_AI.SEARCH.IN → OUT</td><td>RabbitMQ</td><td>4 980</td><td class="danger-text">67</td><td>5,8 сек.</td></tr>
-              <tr><td><b>265</b></td><td>Отмена обработанных сообщений</td><td>MOSEDO_AI.CANCEL.IN → OUT</td><td>RabbitMQ</td><td>680</td><td>6</td><td>2,9 сек.</td></tr>
-            </tbody>
+            <tbody id="endpoints-table-body"></tbody>
           </table>
         </div>
       </div>
@@ -189,16 +144,35 @@
           <h2>Загрузка очередей ИИ: вход / выход</h2>
           <p>Размер очередей и скорость обработки сообщений</p>
         </div>
-        <span class="status-badge status-warning">Требует внимания</span>
-      </div>
-      <div class="row g-3 metric-row">
-        <div class="col-md-3"><div class="metric-card"><span>Входящая очередь сейчас</span><strong>3 240</strong><small>сообщений</small></div></div>
-        <div class="col-md-3"><div class="metric-card"><span>Исходящая очередь сейчас</span><strong>420</strong><small>сообщений</small></div></div>
-        <div class="col-md-3"><div class="metric-card"><span>Среднее время ожидания</span><strong>8 мин.</strong><small>входящая очередь</small></div></div>
-        <div class="col-md-3"><div class="metric-card"><span>Максимальное ожидание</span><strong>27 мин.</strong><small>входящая очередь</small></div></div>
       </div>
       <div class="chart-panel">
-        <div id="queues-chart" class="chart chart-medium"></div>
+        <div class="table-title chart-subtitle">
+          <span>Баланс обмена с ИИ по очередям</span>
+          <label class="inline-select queue-balance-select">
+            <span>Очередь</span>
+            <select class="form-select form-select-sm" id="queue-balance-topic">
+              <option value="all">Все очереди</option>
+              <optgroup label="Сценарии обмена">
+                <option value="rating">93: MOSEDO_AI.RATING</option>
+                <option value="problems">265: MOSEDO_AI.PROBLEMS</option>
+                <option value="search">265: MOSEDO_AI.SEARCH</option>
+                <option value="history">Загрузка: MOSEDO_AI.HISTORY</option>
+              </optgroup>
+              <optgroup label="Физические очереди">
+                <option value="ratingIn">MOSEDO_AI.RATING.IN</option>
+                <option value="ratingOut">MOSEDO_AI.RATING.OUT</option>
+                <option value="problemsIn">MOSEDO_AI.PROBLEMS.IN</option>
+                <option value="problemsOut">MOSEDO_AI.PROBLEMS.OUT</option>
+                <option value="searchIn">MOSEDO_AI.SEARCH.IN</option>
+                <option value="searchOut">MOSEDO_AI.SEARCH.OUT</option>
+                <option value="historyIn">MOSEDO_AI.HISTORY.IN</option>
+                <option value="cancelIn">MOSEDO_AI.CANCEL.IN</option>
+                <option value="cancelOut">MOSEDO_AI.CANCEL.OUT</option>
+              </optgroup>
+            </select>
+          </label>
+        </div>
+        <div id="queue-exchange-balance-chart" class="chart chart-medium"></div>
       </div>
       <div class="chart-panel mt-3">
         <div class="table-title chart-subtitle">Почасовая детализация обмена по сценариям</div>
@@ -223,11 +197,6 @@
             <p>MOSEDO_AI.HISTORY.IN</p>
             <div id="queue-history-chart" class="chart topic-chart"></div>
           </div>
-          <div class="topic-chart-card">
-            <h3>Отмены</h3>
-            <p>MOSEDO_AI.CANCEL.IN → MOSEDO_AI.CANCEL.OUT</p>
-            <div id="queue-cancel-chart" class="chart topic-chart"></div>
-          </div>
         </div>
       </div>
       <div class="table-panel">
@@ -238,18 +207,37 @@
         <div class="table-responsive">
           <table id="queues-details-table" class="table table-sm monitoring-table sortable-table mb-0">
             <thead>
-              <tr><th>Группа</th><th>Очередь</th><th>Направление</th><th>Текущий размер</th><th>Максимум за период</th><th>Поступило</th><th>Обработано</th><th>Ошибки</th><th>Среднее ожидание</th><th>Максимальное ожидание</th></tr>
+              <tr><th>Группа</th><th>Очередь</th><th>Текущий размер</th><th>Максимум за период</th><th>Поступило</th><th>Обработано</th><th>Ошибки</th><th>Среднее ожидание</th><th>Максимальное ожидание</th></tr>
             </thead>
             <tbody>
-              <tr><td>93</td><td>MOSEDO_AI.RATING.IN</td><td>Входящая</td><td class="warning-text">1 520</td><td>2 340</td><td>18 900</td><td>17 380</td><td class="danger-text">84</td><td>8 мин.</td><td>27 мин.</td></tr>
-              <tr><td>93</td><td>MOSEDO_AI.RATING.OUT</td><td>Исходящая</td><td>210</td><td>480</td><td>17 380</td><td>17 170</td><td>9</td><td>2 мин.</td><td>7 мин.</td></tr>
-              <tr><td>265</td><td>MOSEDO_AI.PROBLEMS.IN</td><td>Входящая</td><td>440</td><td>670</td><td>4 120</td><td>3 680</td><td>21</td><td>6 мин.</td><td>18 мин.</td></tr>
-              <tr><td>265</td><td>MOSEDO_AI.PROBLEMS.OUT</td><td>Исходящая</td><td>65</td><td>140</td><td>3 680</td><td>3 615</td><td>4</td><td>1 мин.</td><td>5 мин.</td></tr>
-              <tr><td>265</td><td>MOSEDO_AI.SEARCH.IN</td><td>Входящая</td><td>620</td><td>910</td><td>7 640</td><td>7 020</td><td>33</td><td>5 мин.</td><td>16 мин.</td></tr>
-              <tr><td>265</td><td>MOSEDO_AI.SEARCH.OUT</td><td>Исходящая</td><td>95</td><td>210</td><td>7 020</td><td>6 925</td><td>5</td><td>2 мин.</td><td>6 мин.</td></tr>
-              <tr><td>Загрузка</td><td>MOSEDO_AI.HISTORY.IN</td><td>Входящая</td><td>540</td><td>760</td><td>9 870</td><td>9 330</td><td>31</td><td>7 мин.</td><td>22 мин.</td></tr>
-              <tr><td>Отмены</td><td>MOSEDO_AI.CANCEL.IN</td><td>Входящая</td><td>120</td><td>180</td><td>1 530</td><td>1 410</td><td>13</td><td>3 мин.</td><td>11 мин.</td></tr>
-              <tr><td>Отмены</td><td>MOSEDO_AI.CANCEL.OUT</td><td>Исходящая</td><td>50</td><td>80</td><td>1 410</td><td>1 360</td><td>3</td><td>1 мин.</td><td>4 мин.</td></tr>
+              <tr><td>93</td><td>MOSEDO_AI.RATING</td><td class="warning-text">1 730</td><td>2 820</td><td>18 900</td><td>17 170</td><td class="danger-text">93</td><td>8 мин.</td><td>27 мин.</td></tr>
+              <tr><td>265</td><td>MOSEDO_AI.PROBLEMS</td><td>505</td><td>810</td><td>4 120</td><td>3 615</td><td>25</td><td>6 мин.</td><td>18 мин.</td></tr>
+              <tr><td>265</td><td>MOSEDO_AI.SEARCH</td><td>715</td><td>1 120</td><td>7 640</td><td>6 925</td><td>38</td><td>5 мин.</td><td>16 мин.</td></tr>
+              <tr><td>Загрузка</td><td>MOSEDO_AI.HISTORY</td><td>540</td><td>760</td><td>9 870</td><td>9 330</td><td>31</td><td>7 мин.</td><td>22 мин.</td></tr>
+              <tr><td>Отмены</td><td>MOSEDO_AI.CANCEL</td><td>170</td><td>260</td><td>1 530</td><td>1 360</td><td>16</td><td>3 мин.</td><td>11 мин.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="chart-panel mt-3">
+        <div class="table-title chart-subtitle">Отправка по приоритетам воркеров за последний день</div>
+        <p class="chart-note">Срез показывает, какие задачи реально ушли в ИИ: актуальные обращения за последние 7 дней, пропуски свежих данных прошлого периода до последней обработанной даты и исторические данные.</p>
+        <div id="workers-priority-chart" class="chart chart-medium"></div>
+      </div>
+      <div class="table-panel">
+        <div class="table-title">
+          <span>Приоритеты обработки за последний день</span>
+          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="workers-priority-table" data-export-file="workers-priority.csv">Экспорт CSV</button>
+        </div>
+        <div class="table-responsive">
+          <table id="workers-priority-table" class="table table-sm monitoring-table mb-0">
+            <thead>
+              <tr><th>Воркер</th><th>Приоритет</th><th>Тип данных</th><th>Отправлено за день</th><th>Период данных</th><th>Комментарий</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Worker 1</td><td>Высокий</td><td>Актуальные обращения</td><td>12 480</td><td>Последние 7 дней</td><td>Основной поток обработки обращений</td></tr>
+              <tr><td>Worker 2</td><td>Средний</td><td>Пропуски свежих данных</td><td>3 260</td><td>Прошлый период до последней обработанной даты</td><td>Догрузка пропущенных отправок сообщений</td></tr>
+              <tr><td>Worker 3</td><td>Низкий</td><td>Исторические данные</td><td>8 940</td><td>Архивный период</td><td>Фоновая загрузка истории без блокировки актуальных данных</td></tr>
             </tbody>
           </table>
         </div>
@@ -259,58 +247,15 @@
     <section class="content-section limits-section">
       <div class="section-title">
         <div>
-          <h2>Настройки ограничений ИИ</h2>
-          <p>Контроль близости к максимальной мощности обработки</p>
+          <h2>Использование часового лимита обработки по парам топиков за сутки</h2>
+          <p>Сколько объектов обработано за каждый час: от отправки в IN до получения результата из OUT</p>
         </div>
       </div>
-      <div class="queue-capacity-panel mb-3">
-        <div class="limit-heading">
-          <span>Экспериментальный контроль суммы элементов во всех очередях</span>
-          <b>0,37%</b>
-        </div>
-        <p>При достижении 1 000 000 элементов обработка может остановиться. Показатель рассчитывается как сумма текущих размеров всех очередей.</p>
-        <div class="progress limit-progress queue-capacity-progress" role="progressbar" aria-label="Сумма элементов во всех очередях" aria-valuenow="0.37" aria-valuemin="0" aria-valuemax="100">
-          <div class="progress-bar" style="width: 0.37%"></div>
-          <span class="progress-marker warning-marker" title="Порог предупреждения: 75%"></span>
-          <span class="progress-marker danger-marker" title="Критический порог: 90%"></span>
-        </div>
-        <div class="progress-labels"><span>0</span><span>Сейчас: 3 660</span><span>Экспериментальный максимум: 1 000 000</span></div>
-      </div>
-      <div class="row g-3">
-        <div class="col-xl-5">
-          <div class="limit-panel h-100">
-            <div class="limit-heading">
-              <span>Использование часового лимита обработки</span>
-              <b>78%</b>
-            </div>
-            <div class="progress limit-progress" role="progressbar" aria-label="Использование максимальной мощности ИИ" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100">
-              <div class="progress-bar" style="width: 78%"></div>
-              <span class="progress-marker warning-marker" title="Порог предупреждения: 75%"></span>
-              <span class="progress-marker danger-marker" title="Критический порог: 90%"></span>
-            </div>
-            <div class="progress-labels"><span>0%</span><span>Предупреждение: 75%</span><span>Критично: 90%</span><span>100%</span></div>
-            <div class="row g-2 mt-3">
-              <div class="col-sm-4"><div class="limit-stat"><span>Обработано за час</span><b>78</b><small>запросов</small></div></div>
-              <div class="col-sm-4"><div class="limit-stat"><span>Лимит в час</span><b>100</b><small>запросов</small></div></div>
-              <div class="col-sm-4"><div class="limit-stat"><span>Доступный резерв</span><b>22</b><small>запроса</small></div></div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-7">
-          <form class="settings-panel">
-            <div class="row g-3">
-              <label class="col-md-6 form-label">Максимальная обработка запросов в час<input class="form-control form-control-sm" type="number" value="100"></label>
-              <label class="col-md-3 form-label">Порог предупреждения, %<input class="form-control form-control-sm" type="number" value="75"></label>
-              <label class="col-md-3 form-label">Критический порог, %<input class="form-control form-control-sm" type="number" value="90"></label>
-            </div>
-            <div class="settings-footer">
-              <small>Последнее изменение: 14.05.2026 12:15, пользователь: admin</small>
-              <button class="btn btn-primary btn-sm" type="button">Сохранить настройки</button>
-            </div>
-          </form>
-        </div>
+      <div class="chart-panel">
+        <div id="hourly-limit-chart" class="chart chart-medium"></div>
       </div>
     </section>
+
   </main>
 
   <script src="vendor/highcharts/highcharts.js"></script>

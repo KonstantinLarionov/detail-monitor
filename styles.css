@@ -199,6 +199,7 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
 
 .chart-panel { padding: 10px 10px 2px; }
 .chart { width: 100%; }
+.chart-small { height: 260px; }
 .chart-medium { height: 360px; }
 
 .table-panel { margin-top: 10px; overflow: hidden; }
@@ -280,9 +281,6 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
 .metric-card strong { display: block; margin: 5px 0 3px; font-size: 25px; }
 
 .limit-panel, .settings-panel { padding: 18px; }
-.queue-capacity-panel { padding: 18px; border: 1px solid var(--border); border-radius: 3px; background: #fff; }
-.queue-capacity-panel p { margin-top: 4px; }
-.queue-capacity-progress .progress-bar { background: var(--sky); }
 .chart-subtitle { margin: -10px -10px 8px; }
 
 .topic-chart-grid {
@@ -298,8 +296,6 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
   background: #fff;
 }
 
-.topic-chart-card:last-child { grid-column: 1 / -1; }
-
 .topic-chart-card h3 {
   margin: 12px 12px 0;
   font-size: 13px;
@@ -308,6 +304,12 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
 
 .topic-chart-card p {
   margin: 4px 12px 0;
+  font-size: 11px;
+}
+
+.chart-note {
+  margin: -2px 2px 10px;
+  color: var(--muted);
   font-size: 11px;
 }
 
@@ -341,5 +343,4 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
   .chart-medium { height: 300px; }
   .settings-footer { align-items: stretch; flex-direction: column; }
   .topic-chart-grid { grid-template-columns: 1fr; }
-  .topic-chart-card:last-child { grid-column: auto; }
 }
