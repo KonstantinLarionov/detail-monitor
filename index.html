@@ -103,7 +103,7 @@
       </div>
     </section>
 
-    <section class="content-section mb-4">
+    <section class="content-section">
       <div class="section-title">
         <div>
           <h2>Контроль передачи и обработки объектов в ИИ</h2>
@@ -155,27 +155,37 @@
           </table>
         </div>
       </div>
-      <div class="chart-panel mt-3">
-        <div class="table-title chart-subtitle">Очередность догрузки данных по приоритетам</div>
-        <p class="chart-note">Срез показывает, какие объекты передаются в первую очередь: актуальные данные, пропуски передачи за прошлый период и исторический остаток.</p>
-        <div id="workers-priority-chart" class="chart chart-medium"></div>
+      <div class="priority-block-heading">
+        <h2>Очередность догрузки данных по приоритетам</h2>
+        <p>Распределение отправленных за день объектов по приоритетам обработки и типам догрузки</p>
       </div>
-      <div class="table-panel">
-        <div class="table-title">
-          <span>Приоритеты передачи объектов в ИИ за последний день</span>
-          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="workers-priority-table" data-export-file="workers-priority.csv">Экспорт CSV</button>
+      <div class="row g-3 mt-2 align-items-stretch">
+        <div class="col-lg-5">
+          <div class="chart-panel h-100">
+            <div class="table-title chart-subtitle">Доля типов догрузки за день</div>
+            <p class="chart-note">Срез показывает, какие объекты передаются в первую очередь: актуальные данные, пропуски передачи за прошлый период и исторический остаток.</p>
+            <div id="workers-priority-chart" class="chart chart-medium"></div>
+          </div>
         </div>
-        <div class="table-responsive">
-          <table id="workers-priority-table" class="table table-sm monitoring-table mb-0">
-            <thead>
-              <tr><th>Воркер</th><th>Приоритет</th><th>Тип данных</th><th>Отправлено за день</th><th>Период данных</th><th>Комментарий</th></tr>
-            </thead>
-            <tbody>
-              <tr><td>Worker 1</td><td>Высокий</td><td>Актуальные обращения</td><td>12 480</td><td>Последние 7 дней</td><td>Основной поток обработки обращений</td></tr>
-              <tr><td>Worker 2</td><td>Средний</td><td>Пропуски свежих данных</td><td>3 260</td><td>Прошлый период до последней обработанной даты</td><td>Догрузка пропущенных отправок сообщений</td></tr>
-              <tr><td>Worker 3</td><td>Низкий</td><td>Исторические данные</td><td>8 940</td><td>Архивный период</td><td>Фоновая загрузка истории без блокировки актуальных данных</td></tr>
-            </tbody>
-          </table>
+        <div class="col-lg-7">
+          <div class="table-panel h-100 mt-0">
+            <div class="table-title">
+              <span>Приоритеты передачи объектов в ИИ за последний день</span>
+              <button class="btn btn-light btn-sm export-button" type="button" data-export-table="workers-priority-table" data-export-file="workers-priority.csv">Экспорт CSV</button>
+            </div>
+            <div class="table-responsive">
+              <table id="workers-priority-table" class="table table-sm monitoring-table priority-table mb-0">
+                <thead>
+                  <tr><th>Воркер</th><th>Приоритет</th><th>Тип данных</th><th>Отправлено за день</th><th>Период данных</th><th>Комментарий</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Worker 1</td><td>Высокий</td><td>Актуальные обращения</td><td>12 480</td><td>Последние 7 дней</td><td>Основной поток обработки обращений</td></tr>
+                  <tr><td>Worker 2</td><td>Средний</td><td>Пропуски свежих данных</td><td>3 260</td><td>Прошлый период до последней обработанной даты</td><td>Догрузка пропущенных отправок сообщений</td></tr>
+                  <tr><td>Worker 3</td><td>Низкий</td><td>Исторические данные</td><td>8 940</td><td>Архивный период</td><td>Фоновая загрузка истории без блокировки актуальных данных</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </section>

@@ -293,18 +293,38 @@ createTopicQueueChart('queue-history-chart', [
 ]);
 
 Highcharts.chart('workers-priority-chart', {
-  chart: { type: 'column' },
-  title: { text: null },
-  xAxis: { categories: ['Worker 1: высокий', 'Worker 2: средний', 'Worker 3: низкий'], title: { text: null } },
-  yAxis: { min: 0, title: { text: 'Отправлено за день, шт.' } },
-  tooltip: { shared: true, valueSuffix: ' сообщений' },
+  chart: { type: 'pie' },
+  title: {
+    text: '<b>24 680</b><br><span style="font-size:11px;color:#6d7882">отправлено за день</span>',
+    align: 'center',
+    verticalAlign: 'middle',
+    y: 18,
+    useHTML: true
+  },
+  tooltip: {
+    pointFormat: '<b>{point.y:,.0f}</b> сообщений<br><b>{point.percentage:.1f}%</b> от объема'
+  },
   plotOptions: {
-    column: { stacking: 'normal', borderWidth: 0, borderRadius: 2, groupPadding: 0.2, pointPadding: 0.08 }
+    pie: {
+      innerSize: '64%',
+      borderWidth: 2,
+      borderColor: '#ffffff',
+      dataLabels: {
+        enabled: true,
+        format: '{point.name}: {point.percentage:.1f}%',
+        style: { fontSize: '11px', fontWeight: '400', color: '#59616a' }
+      }
+    }
   },
   series: [
-    { name: 'Актуальные объекты за последние 7 дней', data: [12480, 0, 0], color: palette.purple },
-    { name: 'Пропуски передачи за прошлый период', data: [0, 3260, 0], color: palette.sky },
-    { name: 'Исторический остаток', data: [0, 0, 8940], color: palette.orange }
+    {
+      name: 'Передано в ИИ',
+      data: [
+        { name: 'Актуальные объекты за последние 7 дней', y: 12480, color: palette.purple },
+        { name: 'Пропуски передачи за прошлый период', y: 3260, color: palette.sky },
+        { name: 'Исторический остаток', y: 8940, color: palette.orange }
+      ]
+    }
   ]
 });
 
