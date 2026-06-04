@@ -171,19 +171,45 @@
           <div class="table-panel h-100 mt-0">
             <div class="table-title">
               <span>Приоритеты передачи объектов в ИИ за последний день</span>
-              <button class="btn btn-light btn-sm export-button" type="button" data-export-table="workers-priority-table" data-export-file="workers-priority.csv">Экспорт CSV</button>
+              <button class="btn btn-light btn-sm export-button" type="button" data-export-priority-cards="true" data-export-file="workers-priority.csv">Экспорт CSV</button>
             </div>
-            <div class="table-responsive">
-              <table id="workers-priority-table" class="table table-sm monitoring-table priority-table mb-0">
-                <thead>
-                  <tr><th>Воркер</th><th>Приоритет</th><th>Тип данных</th><th>Отправлено за день</th><th>Период данных</th><th>Комментарий</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td>Worker 1</td><td>Высокий</td><td>Актуальные обращения</td><td>12 480</td><td>Последние 7 дней</td><td>Основной поток обработки обращений</td></tr>
-                  <tr><td>Worker 2</td><td>Средний</td><td>Пропуски свежих данных</td><td>3 260</td><td>Прошлый период до последней обработанной даты</td><td>Догрузка пропущенных отправок сообщений</td></tr>
-                  <tr><td>Worker 3</td><td>Низкий</td><td>Исторические данные</td><td>8 940</td><td>Архивный период</td><td>Фоновая загрузка истории без блокировки актуальных данных</td></tr>
-                </tbody>
-              </table>
+            <div class="priority-card-list">
+              <article class="priority-card priority-high" data-worker="Worker 1" data-priority="Высокий" data-type="Актуальные обращения" data-sent="12 480" data-period="Последние 7 дней" data-comment="Основной поток обработки обращений">
+                <div>
+                  <span class="priority-label">Высокий приоритет</span>
+                  <h3>Worker 1</h3>
+                  <p>Актуальные обращения</p>
+                </div>
+                <div class="priority-card-value">12 480</div>
+                <dl>
+                  <dt>Период данных</dt><dd>Последние 7 дней</dd>
+                  <dt>Комментарий</dt><dd>Основной поток обработки обращений</dd>
+                </dl>
+              </article>
+              <article class="priority-card priority-medium" data-worker="Worker 2" data-priority="Средний" data-type="Пропуски свежих данных" data-sent="3 260" data-period="Прошлый период до последней обработанной даты" data-comment="Догрузка пропущенных отправок сообщений">
+                <div>
+                  <span class="priority-label">Средний приоритет</span>
+                  <h3>Worker 2</h3>
+                  <p>Пропуски свежих данных</p>
+                </div>
+                <div class="priority-card-value">3 260</div>
+                <dl>
+                  <dt>Период данных</dt><dd>Прошлый период до последней обработанной даты</dd>
+                  <dt>Комментарий</dt><dd>Догрузка пропущенных отправок сообщений</dd>
+                </dl>
+              </article>
+              <article class="priority-card priority-low" data-worker="Worker 3" data-priority="Низкий" data-type="Исторические данные" data-sent="8 940" data-period="Архивный период" data-comment="Фоновая загрузка истории без блокировки актуальных данных">
+                <div>
+                  <span class="priority-label">Низкий приоритет</span>
+                  <h3>Worker 3</h3>
+                  <p>Исторические данные</p>
+                </div>
+                <div class="priority-card-value">8 940</div>
+                <dl>
+                  <dt>Период данных</dt><dd>Архивный период</dd>
+                  <dt>Комментарий</dt><dd>Фоновая загрузка истории без блокировки актуальных данных</dd>
+                </dl>
+              </article>
             </div>
           </div>
         </div>

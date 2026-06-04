@@ -420,9 +420,49 @@ function exportTableToCsv(tableId, fileName) {
   URL.revokeObjectURL(url);
 }
 
+function exportRowsToCsv(rows, fileName) {
+  const content = rows
+    .map((row) => row.map((cell) => escapeCsvCell(String(cell))).join(';'))
+    .join('\r\n');
+  const blob = new Blob([`\uFEFF${content}`], {
+    type: 'text/csv;charset=utf-8;'
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
+
+function exportPriorityCardsToCsv(fileName) {
+  const rows = [
+    ['Воркер', 'Приоритет', 'Тип данных', 'Отправлено за день', 'Период данных', 'Комментарий']
+  ];
+  document.querySelectorAll('.priority-card').forEach((card) => {
+    rows.push([
+      card.dataset.worker,
+      card.dataset.priority,
+      card.dataset.type,
+      card.dataset.sent,
+      card.dataset.period,
+      card.dataset.comment
+    ]);
+  });
+  exportRowsToCsv(rows, fileName);
+}
+
 document.querySelectorAll('[data-export-table]').forEach((button) => {
   button.addEventListener('click', () => {
     exportTableToCsv(button.dataset.exportTable, button.dataset.exportFile);
+  });
+});
+
+document.querySelectorAll('[data-export-priority-cards]').forEach((button) => {
+  button.addEventListener('click', () => {
+    exportPriorityCardsToCsv(button.dataset.exportFile);
   });
 });
 
