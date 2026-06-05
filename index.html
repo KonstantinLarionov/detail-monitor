@@ -57,47 +57,145 @@
         </div>
         <div class="d-flex flex-wrap align-items-end gap-2">
           <label class="filter-control">
-            <span>Период с</span>
-            <input class="form-control form-control-sm" type="date" value="2026-05-08">
-          </label>
-          <label class="filter-control">
-            <span>по</span>
+            <span>Дата</span>
             <input class="form-control form-control-sm" type="date" value="2026-05-14">
-          </label>
-          <label class="filter-control">
-            <span>Группировка</span>
-            <select class="form-select form-select-sm">
-              <option>По часам</option>
-              <option>По дням</option>
-            </select>
           </label>
           <button class="btn btn-light btn-sm apply-button">Применить</button>
         </div>
       </div>
+      <p class="period-note">Панель строится за 24 часа, начиная с выбранной даты: 14.05.2026 00:00 - 14.05.2026 23:59.</p>
       <div class="updated-at">Данные обновлены: 14.05.2026 14:35</div>
+    </section>
+
+    <section class="content-section limits-section">
+      <div class="section-title">
+        <div>
+          <h2>Использование часового лимита обработки объектов ИИ</h2>
+          <p>Очередь истории: отдельно обращения и ответы, фактическая обработка на фоне часовых лимитов</p>
+        </div>
+      </div>
+      <div class="chart-panel">
+        <div id="hourly-limit-chart" class="chart chart-medium"></div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <div class="section-title">
+        <div>
+          <h2>Ошибки обработки очереди истории за сутки</h2>
+          <p>Ошибки по обращениям и ответам в разрезе часов; при нажатии на столбец ниже отображаются конкретные объекты</p>
+        </div>
+      </div>
+      <div class="chart-panel">
+        <div id="history-errors-chart" class="chart chart-small"></div>
+      </div>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="table-panel h-100">
+            <div class="table-title">
+              <span id="history-letter-errors-title">Ошибки обращений по всем часам</span>
+              <button class="btn btn-light btn-sm export-button" type="button" data-export-table="history-letter-errors-table" data-export-file="history-letter-errors.csv">Экспорт CSV</button>
+            </div>
+            <div class="table-responsive">
+              <table id="history-letter-errors-table" class="table table-sm monitoring-table mb-0">
+                <thead>
+                  <tr><th>Время</th><th>ID обращения</th><th>Очередь</th><th>Причина ошибки</th><th>Статус</th></tr>
+                </thead>
+                <tbody id="history-letter-errors-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="table-panel h-100">
+            <div class="table-title">
+              <span id="history-answer-errors-title">Ошибки ответов по всем часам</span>
+              <button class="btn btn-light btn-sm export-button" type="button" data-export-table="history-answer-errors-table" data-export-file="history-answer-errors.csv">Экспорт CSV</button>
+            </div>
+            <div class="table-responsive">
+              <table id="history-answer-errors-table" class="table table-sm monitoring-table mb-0">
+                <thead>
+                  <tr><th>Время</th><th>ID обращения</th><th>ID ответа</th><th>Очередь</th><th>Причина ошибки</th><th>Статус</th></tr>
+                </thead>
+                <tbody id="history-answer-errors-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="content-section">
       <div class="section-title">
         <div>
           <h2>Контроль доступности объектов к выгрузке в ИИ</h2>
-          <p>Проверка, какие обращения и ответы могут быть переданы в ИИ по результату ФЛК</p>
+          <p>Только объекты, не прошедшие ФЛК: обращения и ответы с причинами недоступности к выгрузке</p>
         </div>
       </div>
       <div class="chart-panel">
         <div id="flk-day-chart" class="chart chart-small"></div>
       </div>
+      <div class="row g-3">
+        <div class="col-lg-6">
+          <div class="table-panel h-100">
+            <div class="table-title">
+              <span id="flk-letter-table-title">Обращения, не прошедшие ФЛК</span>
+              <button class="btn btn-light btn-sm export-button" type="button" data-export-table="flk-letter-table" data-export-file="flk-letters.csv">Экспорт CSV</button>
+            </div>
+            <div class="table-responsive">
+              <table id="flk-letter-table" class="table table-sm monitoring-table mb-0">
+                <thead>
+                  <tr><th>ID обращения</th><th>Проверка</th><th>Причина</th><th>Время проверки</th></tr>
+                </thead>
+                <tbody id="flk-letter-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="table-panel h-100">
+            <div class="table-title">
+              <span id="flk-answer-table-title">Ответы, не прошедшие ФЛК</span>
+              <button class="btn btn-light btn-sm export-button" type="button" data-export-table="flk-answer-table" data-export-file="flk-answers.csv">Экспорт CSV</button>
+            </div>
+            <div class="table-responsive">
+              <table id="flk-answer-table" class="table table-sm monitoring-table mb-0">
+                <thead>
+                  <tr><th>ID обращения</th><th>ID ответа</th><th>Проверка</th><th>Причина</th><th>Время проверки</th></tr>
+                </thead>
+                <tbody id="flk-answer-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <div class="section-title">
+        <div>
+          <h2>Техническая скорость обработки запросов ИИ</h2>
+          <p>Количество обращений по 10 диапазонам скорости обработки; детализация по ID доступна по нажатию на столбец</p>
+        </div>
+        <label class="inline-select">
+          <span>Час</span>
+          <input class="form-control form-control-sm" type="time" id="endpoint-hour-filter" value="12:00" step="3600">
+        </label>
+      </div>
+      <div class="chart-panel">
+        <div id="endpoints-chart" class="chart chart-medium"></div>
+      </div>
       <div class="table-panel">
         <div class="table-title">
-          <span id="flk-table-title">Объекты по результату ФЛК за сутки</span>
-          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="flk-day-table" data-export-file="flk-day.csv">Экспорт CSV</button>
+          <span id="endpoints-table-title">Обращения по выбранному часу и всем скоростям</span>
+          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="endpoints-details-table" data-export-file="endpoints-details.csv">Экспорт CSV</button>
         </div>
         <div class="table-responsive">
-          <table id="flk-day-table" class="table table-sm monitoring-table mb-0">
+          <table id="endpoints-details-table" class="table table-sm monitoring-table mb-0">
             <thead>
-              <tr><th>ID обращения</th><th>ID ответа</th><th>Тип объекта</th><th>Проверка</th><th>Результат ФЛК</th><th>Причина</th><th>Время проверки</th></tr>
+              <tr><th>ID обращения</th><th>Группа</th><th>Пара топиков / endpoint</th><th>Функциональный блок</th><th>Скорость</th><th>Время ответа</th><th>Статус</th></tr>
             </thead>
-            <tbody id="flk-table-body"></tbody>
+            <tbody id="endpoints-table-body"></tbody>
           </table>
         </div>
       </div>
@@ -130,7 +228,7 @@
           </div>
           <div class="topic-chart-card">
             <h3>Загрузка истории</h3>
-            <p>MOSEDO_AI.HISTORY.IN</p>
+            <p>MOSEDO_AI.HISTORY.IN → MOSEDO_AI.RATING.OUT</p>
             <div id="queue-history-chart" class="chart topic-chart"></div>
           </div>
         </div>
@@ -152,112 +250,6 @@
               <tr><td>Загрузка</td><td>MOSEDO_AI.HISTORY</td><td>540</td><td>760</td><td>9 870</td><td>9 330</td><td>31</td><td>7 мин.</td><td>22 мин.</td></tr>
               <tr><td>Отмены</td><td>MOSEDO_AI.CANCEL</td><td>170</td><td>260</td><td>1 530</td><td>1 360</td><td>16</td><td>3 мин.</td><td>11 мин.</td></tr>
             </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="priority-block-heading">
-        <h2>Очередность догрузки данных по приоритетам</h2>
-        <p>Распределение отправленных за день объектов по приоритетам обработки и типам догрузки</p>
-      </div>
-      <div class="row g-3 mt-2 align-items-stretch">
-        <div class="col-lg-5">
-          <div class="chart-panel h-100">
-            <div class="table-title chart-subtitle">Доля типов догрузки за день</div>
-            <p class="chart-note">Срез показывает, какие объекты передаются в первую очередь: актуальные данные, пропуски передачи за прошлый период и исторический остаток.</p>
-            <div id="workers-priority-chart" class="chart chart-medium"></div>
-          </div>
-        </div>
-        <div class="col-lg-7">
-          <div class="table-panel h-100 mt-0">
-            <div class="table-title">
-              <span>Приоритеты передачи объектов в ИИ за последний день</span>
-              <button class="btn btn-light btn-sm export-button" type="button" data-export-priority-cards="true" data-export-file="workers-priority.csv">Экспорт CSV</button>
-            </div>
-            <div class="priority-card-list">
-              <article class="priority-card priority-high" data-worker="Worker 1" data-priority="Высокий" data-type="Актуальные обращения" data-sent="12 480" data-period="Последние 7 дней" data-comment="Основной поток обработки обращений">
-                <div>
-                  <span class="priority-label">Высокий приоритет</span>
-                  <h3>Worker 1</h3>
-                  <p>Актуальные обращения</p>
-                </div>
-                <div class="priority-card-value">12 480</div>
-                <dl>
-                  <dt>Период данных</dt><dd>Последние 7 дней</dd>
-                  <dt>Комментарий</dt><dd>Основной поток обработки обращений</dd>
-                </dl>
-              </article>
-              <article class="priority-card priority-medium" data-worker="Worker 2" data-priority="Средний" data-type="Пропуски свежих данных" data-sent="3 260" data-period="Прошлый период до последней обработанной даты" data-comment="Догрузка пропущенных отправок сообщений">
-                <div>
-                  <span class="priority-label">Средний приоритет</span>
-                  <h3>Worker 2</h3>
-                  <p>Пропуски свежих данных</p>
-                </div>
-                <div class="priority-card-value">3 260</div>
-                <dl>
-                  <dt>Период данных</dt><dd>Прошлый период до последней обработанной даты</dd>
-                  <dt>Комментарий</dt><dd>Догрузка пропущенных отправок сообщений</dd>
-                </dl>
-              </article>
-              <article class="priority-card priority-low" data-worker="Worker 3" data-priority="Низкий" data-type="Исторические данные" data-sent="8 940" data-period="Архивный период" data-comment="Фоновая загрузка истории без блокировки актуальных данных">
-                <div>
-                  <span class="priority-label">Низкий приоритет</span>
-                  <h3>Worker 3</h3>
-                  <p>Исторические данные</p>
-                </div>
-                <div class="priority-card-value">8 940</div>
-                <dl>
-                  <dt>Период данных</dt><dd>Архивный период</dd>
-                  <dt>Комментарий</dt><dd>Фоновая загрузка истории без блокировки актуальных данных</dd>
-                </dl>
-              </article>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="content-section limits-section">
-      <div class="section-title">
-        <div>
-          <h2>Использование часового лимита обработки объектов ИИ</h2>
-          <p>Контроль близости к лимиту обработки по бизнес-сценариям за сутки</p>
-        </div>
-      </div>
-      <div class="chart-panel">
-        <div id="hourly-limit-chart" class="chart chart-medium"></div>
-      </div>
-    </section>
-
-    <section class="content-section">
-      <div class="section-title">
-        <div>
-          <h2>Техническая скорость обработки запросов ИИ</h2>
-          <p>Дополнительная диагностика после проверки передачи данных: столбцы показывают количество обращений по диапазонам скорости обработки</p>
-        </div>
-        <label class="inline-select">
-          <span>Сценарий</span>
-          <select class="form-select form-select-sm" id="endpoint-queue-filter">
-            <option value="all">Все сценарии</option>
-            <option value="1023 REST API">1023 REST API</option>
-            <option value="93 ответы и рекомендации">93 ответы и рекомендации</option>
-            <option value="265 остальные сценарии">265 остальные сценарии</option>
-          </select>
-        </label>
-      </div>
-      <div class="chart-panel">
-        <div id="endpoints-chart" class="chart chart-medium"></div>
-      </div>
-      <div class="table-panel">
-        <div class="table-title">
-          <span id="endpoints-table-title">Обращения по всем сценариям и скоростям</span>
-          <button class="btn btn-light btn-sm export-button" type="button" data-export-table="endpoints-details-table" data-export-file="endpoints-details.csv">Экспорт CSV</button>
-        </div>
-        <div class="table-responsive">
-          <table id="endpoints-details-table" class="table table-sm monitoring-table mb-0">
-            <thead>
-              <tr><th>ID обращения</th><th>Группа</th><th>Пара топиков / endpoint</th><th>Функциональный блок</th><th>Время ответа</th><th>Статус</th></tr>
-            </thead>
-            <tbody id="endpoints-table-body"></tbody>
           </table>
         </div>
       </div>

@@ -190,6 +190,12 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
 
 .apply-button { border: 1px solid #d8e0e6; }
 .updated-at { color: #6a7780; font-size: 11px; text-align: right; }
+.period-note {
+  margin-top: -4px;
+  margin-bottom: 6px;
+  color: #45515a;
+}
+.inline-select input { min-width: 120px; }
 
 .chart-panel, .table-panel, .metric-card, .limit-panel, .settings-panel {
   border: 1px solid var(--border);
@@ -244,114 +250,6 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
 }
 .monitoring-table td { padding: 8px 11px; border-bottom-color: #e8edf0; white-space: nowrap; }
 .monitoring-table tr:last-child td { border-bottom: none; }
-
-.priority-block-heading {
-  margin: 16px -14px 8px;
-  padding: 14px 14px 0;
-  border-top: 1px solid #c6dbe8;
-}
-
-.priority-block-heading h2 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.priority-block-heading p {
-  margin: 4px 0 0;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.priority-table th {
-  padding-top: 14px;
-  padding-bottom: 14px;
-}
-
-.priority-table td {
-  padding-top: 18px;
-  padding-bottom: 18px;
-  line-height: 1.35;
-  vertical-align: middle;
-  white-space: normal;
-}
-
-.priority-card-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 12px;
-}
-
-.priority-card {
-  display: grid;
-  grid-template-columns: minmax(165px, 1fr) 112px minmax(220px, 1.45fr);
-  gap: 14px;
-  align-items: center;
-  min-height: 104px;
-  padding: 16px;
-  border: 1px solid #dce5eb;
-  border-left-width: 5px;
-  border-radius: 4px;
-  background: #fff;
-}
-
-.priority-high { border-left-color: var(--purple); }
-.priority-medium { border-left-color: var(--sky); }
-.priority-low { border-left-color: var(--orange); }
-
-.priority-label {
-  display: inline-block;
-  margin-bottom: 6px;
-  color: #5c6973;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.priority-card h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.priority-card p {
-  margin: 4px 0 0;
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.priority-card-value {
-  color: #1d2a33;
-  font-size: 26px;
-  font-weight: 700;
-  text-align: right;
-}
-
-.priority-card-value::after {
-  display: block;
-  margin-top: 2px;
-  color: var(--muted);
-  content: "отправлено";
-  font-size: 11px;
-  font-weight: 400;
-}
-
-.priority-card dl {
-  display: grid;
-  grid-template-columns: 92px 1fr;
-  gap: 6px 10px;
-  margin: 0;
-  font-size: 12px;
-}
-
-.priority-card dt {
-  color: var(--muted);
-  font-weight: 700;
-}
-
-.priority-card dd {
-  margin: 0;
-}
 
 .sortable-header {
   cursor: pointer;
