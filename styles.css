@@ -220,6 +220,19 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
   font-weight: 700;
 }
 
+.table-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  background: #fff;
+}
+
+.table-filters .filter-control select {
+  min-width: 220px;
+}
+
 .export-button {
   border: 1px solid #d8e0e6;
   color: #425a70;

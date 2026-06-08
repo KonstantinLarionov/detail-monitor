@@ -93,38 +93,73 @@ const historyErrorObjects = [
   { hour: '13:00', letterId: '88014209', answerId: '99045217', type: 'Ответ', queue: 'MOSEDO_AI.HISTORY', reason: 'Истек таймаут записи результата обработки', status: 'Ошибка' }
 ];
 
-function renderHistoryErrorsTable(type, hour = 'all') {
+const historyErrorReasons = [...new Set(historyErrorObjects.map((item) => item.reason))];
+const historyReasonFilter = document.getElementById('history-error-reason-filter');
+const historyTypeFilter = document.getElementById('history-error-type-filter');
+const historyHourFilter = document.getElementById('history-error-hour-filter');
+historyErrorReasons.forEach((reason) => {
+  const option = document.createElement('option');
+  option.value = reason;
+  option.textContent = reason;
+  historyReasonFilter.appendChild(option);
+});
+dayHours.forEach((hour) => {
+  const option = document.createElement('option');
+  option.value = hour;
+  option.textContent = hour;
+  historyHourFilter.appendChild(option);
+});
+
+let selectedHistoryErrorHour = 'all';
+let selectedHistoryErrorReason = 'all';
+let selectedHistoryErrorType = 'all';
+
+function renderHistoryErrorsTable(type = 'all', hour = 'all', reason = 'all') {
   const rows = historyErrorObjects.filter((item) => {
     const hourMatches = hour === 'all' || item.hour === hour;
-    return hourMatches && item.type === type;
+    const reasonMatches = reason === 'all' || item.reason === reason;
+    const typeMatches = type === 'all' || item.type === type;
+    return hourMatches && reasonMatches && typeMatches;
   });
-  const isLetter = type === 'Обращение';
-  const title = document.getElementById(isLetter ? 'history-letter-errors-title' : 'history-answer-errors-title');
-  const body = document.getElementById(isLetter ? 'history-letter-errors-body' : 'history-answer-errors-body');
+  const title = document.getElementById('history-errors-table-title');
+  const body = document.getElementById('history-errors-table-body');
   const hourText = hour === 'all' ? 'по всем часам' : `за ${hour}`;
-  title.textContent = `${isLetter ? 'Ошибки обращений' : 'Ошибки ответов'} ${hourText}`;
-  body.innerHTML = rows.length ? rows.map((item) => {
-    if (isLetter) {
-      return `<tr>
-        <td>${item.hour}</td>
-        <td>${item.letterId}</td>
-        <td>${item.queue}</td>
-        <td>${item.reason}</td>
-        <td class="danger-text">${item.status}</td>
-      </tr>`;
-    }
-    return `<tr>
+  const typeText = type === 'all' ? 'все объекты' : type.toLowerCase();
+  const reasonText = reason === 'all' ? '' : `, причина: ${reason}`;
+  title.textContent = `Ошибки интеграции с ИИ: ${typeText}, ${hourText}${reasonText}`;
+  body.innerHTML = rows.length ? rows.map((item) => `<tr>
       <td>${item.hour}</td>
       <td>${item.letterId}</td>
       <td>${item.answerId}</td>
+      <td>${item.type}</td>
       <td>${item.queue}</td>
       <td>${item.reason}</td>
       <td class="danger-text">${item.status}</td>
-    </tr>`;
-  }).join('') : `<tr><td colspan="${isLetter ? 5 : 6}" class="text-muted">Ошибок за выбранный час нет</td></tr>`;
+    </tr>`).join('') : '<tr><td colspan="7" class="text-muted">Ошибки по выбранным фильтрам не найдены</td></tr>';
 }
 
-Highcharts.chart('history-errors-chart', {
+function getHistoryErrorSeries(reason = 'all') {
+  return [
+    {
+      name: 'Обращение',
+      data: dayHours.map((hour) => historyErrorObjects.filter((item) => {
+        const reasonMatches = reason === 'all' || item.reason === reason;
+        return item.hour === hour && item.type === 'Обращение' && reasonMatches;
+      }).length),
+      color: palette.purple
+    },
+    {
+      name: 'Ответ',
+      data: dayHours.map((hour) => historyErrorObjects.filter((item) => {
+        const reasonMatches = reason === 'all' || item.reason === reason;
+        return item.hour === hour && item.type === 'Ответ' && reasonMatches;
+      }).length),
+      color: palette.sky
+    }
+  ];
+}
+
+const historyErrorsChart = Highcharts.chart('history-errors-chart', {
   chart: { type: 'column' },
   title: { text: null },
   xAxis: { categories: dayHours, title: { text: 'Час суток' }, labels: { rotation: -45 } },
@@ -138,19 +173,44 @@ Highcharts.chart('history-errors-chart', {
       point: {
         events: {
           click() {
-            renderHistoryErrorsTable(this.series.name, this.category);
+            selectedHistoryErrorHour = this.category;
+            selectedHistoryErrorType = this.series.name;
+            historyHourFilter.value = selectedHistoryErrorHour;
+            historyTypeFilter.value = selectedHistoryErrorType;
+            renderHistoryErrorsTable(selectedHistoryErrorType, selectedHistoryErrorHour, selectedHistoryErrorReason);
           }
         }
       }
     }
   },
-  series: [
-    { name: 'Обращение', data: dayHours.map((hour) => historyErrorObjects.filter((item) => item.hour === hour && item.type === 'Обращение').length), color: palette.purple },
-    { name: 'Ответ', data: dayHours.map((hour) => historyErrorObjects.filter((item) => item.hour === hour && item.type === 'Ответ').length), color: palette.sky }
-  ]
+  series: getHistoryErrorSeries()
 });
-renderHistoryErrorsTable('Обращение');
-renderHistoryErrorsTable('Ответ');
+
+historyReasonFilter.addEventListener('change', (event) => {
+  selectedHistoryErrorReason = event.target.value;
+  selectedHistoryErrorHour = 'all';
+  selectedHistoryErrorType = 'all';
+  historyHourFilter.value = selectedHistoryErrorHour;
+  historyTypeFilter.value = selectedHistoryErrorType;
+  while (historyErrorsChart.series.length) {
+    historyErrorsChart.series[0].remove(false);
+  }
+  getHistoryErrorSeries(selectedHistoryErrorReason).forEach((series) => historyErrorsChart.addSeries(series, false));
+  historyErrorsChart.redraw();
+  renderHistoryErrorsTable(selectedHistoryErrorType, selectedHistoryErrorHour, selectedHistoryErrorReason);
+});
+
+historyTypeFilter.addEventListener('change', (event) => {
+  selectedHistoryErrorType = event.target.value;
+  renderHistoryErrorsTable(selectedHistoryErrorType, selectedHistoryErrorHour, selectedHistoryErrorReason);
+});
+
+historyHourFilter.addEventListener('change', (event) => {
+  selectedHistoryErrorHour = event.target.value;
+  renderHistoryErrorsTable(selectedHistoryErrorType, selectedHistoryErrorHour, selectedHistoryErrorReason);
+});
+
+renderHistoryErrorsTable(selectedHistoryErrorType, selectedHistoryErrorHour, selectedHistoryErrorReason);
 
 const flkObjects = [
   { letterId: '88013210', answerId: '-', objectType: 'Обращение', reason: 'Нет текста обращения', checkedAt: '14.05.2026 08:12' },
@@ -166,31 +226,39 @@ const flkObjects = [
   { letterId: '88013217', answerId: '99043104', objectType: 'Ответ', reason: 'Связанное обращение не найдено в регистрационных данных', checkedAt: '14.05.2026 10:38' },
   { letterId: '88013223', answerId: '99043108', objectType: 'Ответ', reason: 'Ответ привязан к закрытому обращению', checkedAt: '14.05.2026 11:17' }
 ];
-function renderFlkTable(type) {
+
+const flkReasonFilter = document.getElementById('flk-reason-filter');
+[...new Set(flkObjects.map((item) => item.reason))].forEach((reason) => {
+  const option = document.createElement('option');
+  option.value = reason;
+  option.textContent = reason;
+  flkReasonFilter.appendChild(option);
+});
+
+let selectedFlkType = 'all';
+let selectedFlkReason = 'all';
+
+function renderFlkTable(type = 'all', reason = 'all') {
   const rows = flkObjects.filter((item) => {
-    return item.objectType === type;
+    const typeMatches = type === 'all' || item.objectType === type;
+    const reasonMatches = reason === 'all' || item.reason === reason;
+    return typeMatches && reasonMatches;
   });
-  const isLetter = type === 'Обращение';
-  const title = document.getElementById(isLetter ? 'flk-letter-table-title' : 'flk-answer-table-title');
-  const body = document.getElementById(isLetter ? 'flk-letter-table-body' : 'flk-answer-table-body');
-  title.textContent = isLetter ? 'Обращения, не прошедшие ФЛК' : 'Ответы, не прошедшие ФЛК';
+  const title = document.getElementById('flk-table-title');
+  const body = document.getElementById('flk-table-body');
+  const typeText = type === 'all' ? 'все объекты' : type.toLowerCase();
+  const reasonText = reason === 'all' ? 'все причины' : reason;
+  title.textContent = `Объекты, не прошедшие ФЛК: ${typeText}, ${reasonText}`;
   body.innerHTML = rows.map((item) => {
-    if (isLetter) {
-      return `<tr>
-        <td>${item.letterId}</td>
-        <td>Обязательные поля обращения</td>
-        <td>${item.reason}</td>
-        <td>${item.checkedAt}</td>
-      </tr>`;
-    }
     return `<tr>
       <td>${item.letterId}</td>
       <td>${item.answerId}</td>
-      <td>Обязательные поля ответа / связь</td>
+      <td>${item.objectType}</td>
+      <td>${item.objectType === 'Обращение' ? 'Обязательные поля обращения' : 'Обязательные поля ответа / связь'}</td>
       <td>${item.reason}</td>
       <td>${item.checkedAt}</td>
     </tr>`;
-  }).join('');
+  }).join('') || '<tr><td colspan="6" class="text-muted">Объекты по выбранным фильтрам не найдены</td></tr>';
 }
 
 Highcharts.chart('flk-day-chart', {
@@ -207,7 +275,9 @@ Highcharts.chart('flk-day-chart', {
       point: {
         events: {
           click() {
-            renderFlkTable(this.category === 'Обращения' ? 'Обращение' : 'Ответ');
+            selectedFlkType = this.category === 'Обращения' ? 'Обращение' : 'Ответ';
+            document.getElementById('flk-type-filter').value = selectedFlkType;
+            renderFlkTable(selectedFlkType, selectedFlkReason);
           }
         }
       }
@@ -223,8 +293,18 @@ Highcharts.chart('flk-day-chart', {
     }
   ]
 });
-renderFlkTable('Обращение');
-renderFlkTable('Ответ');
+
+document.getElementById('flk-type-filter').addEventListener('change', (event) => {
+  selectedFlkType = event.target.value;
+  renderFlkTable(selectedFlkType, selectedFlkReason);
+});
+
+flkReasonFilter.addEventListener('change', (event) => {
+  selectedFlkReason = event.target.value;
+  renderFlkTable(selectedFlkType, selectedFlkReason);
+});
+
+renderFlkTable(selectedFlkType, selectedFlkReason);
 
 const endpointRequests = [
   { id: '77018421', hour: '12:00', group: '1023', queue: '1023 REST API', endpoint: 'POST /rate', feature: 'Оценка ответа', speed: 264, time: '1,8 сек.', status: 'Успешно' },
@@ -262,6 +342,15 @@ const endpointRequests = [
 ];
 
 const speedBuckets = ['0-25', '25-50', '50-75', '75-100', '100-125', '125-150', '150-175', '175-200', '200-225', '225+'];
+const endpointQueueFilter = document.getElementById('endpoint-table-queue-filter');
+const endpointSpeedFilter = document.getElementById('endpoint-table-speed-filter');
+const endpointStatusFilter = document.getElementById('endpoint-table-status-filter');
+speedBuckets.forEach((bucket) => {
+  const option = document.createElement('option');
+  option.value = bucket;
+  option.textContent = `${bucket} сообщ./мин.`;
+  endpointSpeedFilter.appendChild(option);
+});
 
 function getSpeedBucket(speed) {
   if (speed < 25) return '0-25';
@@ -287,18 +376,20 @@ function getEndpointChartSeries(hourFilter = '12:00') {
   }));
 }
 
-function renderEndpointTable(hourFilter = '12:00', speedBucket = 'all', queueFilter = 'all') {
+function renderEndpointTable(hourFilter = '12:00', speedBucket = 'all', queueFilter = 'all', statusFilter = 'all') {
   const rows = endpointRequests.filter((item) => {
     const hourMatches = item.hour === hourFilter;
     const speedMatches = speedBucket === 'all' || getSpeedBucket(item.speed) === speedBucket;
     const queueMatches = queueFilter === 'all' || item.queue === queueFilter;
-    return hourMatches && speedMatches && queueMatches;
+    const statusMatches = statusFilter === 'all' || item.status === statusFilter;
+    return hourMatches && speedMatches && queueMatches && statusMatches;
   });
   const title = document.getElementById('endpoints-table-title');
   const body = document.getElementById('endpoints-table-body');
   const queueText = queueFilter === 'all' ? 'всем сценариям' : queueFilter;
   const speedText = speedBucket === 'all' ? 'всем диапазонам скорости' : `скорости ${speedBucket} сообщ./мин.`;
-  title.textContent = `Обращения за ${hourFilter}: ${queueText}, ${speedText}`;
+  const statusText = statusFilter === 'all' ? 'все статусы' : statusFilter.toLowerCase();
+  title.textContent = `Обращения за ${hourFilter}: ${queueText}, ${speedText}, ${statusText}`;
   body.innerHTML = rows.length ? rows.map((item) => {
     const statusClass = item.status === 'Ошибка' ? ' class="danger-text"' : '';
     return `<tr>
@@ -316,6 +407,7 @@ function renderEndpointTable(hourFilter = '12:00', speedBucket = 'all', queueFil
 let selectedEndpointHour = '12:00';
 let selectedEndpointSpeed = 'all';
 let selectedEndpointQueue = 'all';
+let selectedEndpointStatus = 'all';
 
 const endpointsChart = Highcharts.chart('endpoints-chart', {
   chart: { type: 'column' },
@@ -345,7 +437,9 @@ const endpointsChart = Highcharts.chart('endpoints-chart', {
           click() {
             selectedEndpointSpeed = this.category;
             selectedEndpointQueue = this.series.name;
-            renderEndpointTable(selectedEndpointHour, selectedEndpointSpeed, selectedEndpointQueue);
+            endpointSpeedFilter.value = selectedEndpointSpeed;
+            endpointQueueFilter.value = selectedEndpointQueue;
+            renderEndpointTable(selectedEndpointHour, selectedEndpointSpeed, selectedEndpointQueue, selectedEndpointStatus);
           }
         }
       }
@@ -358,14 +452,34 @@ document.getElementById('endpoint-hour-filter').addEventListener('change', (even
   selectedEndpointHour = event.target.value;
   selectedEndpointSpeed = 'all';
   selectedEndpointQueue = 'all';
+  selectedEndpointStatus = 'all';
+  endpointSpeedFilter.value = selectedEndpointSpeed;
+  endpointQueueFilter.value = selectedEndpointQueue;
+  endpointStatusFilter.value = selectedEndpointStatus;
   while (endpointsChart.series.length) {
     endpointsChart.series[0].remove(false);
   }
   getEndpointChartSeries(selectedEndpointHour).forEach((series) => endpointsChart.addSeries(series, false));
   endpointsChart.redraw();
-  renderEndpointTable(selectedEndpointHour, selectedEndpointSpeed, selectedEndpointQueue);
+  renderEndpointTable(selectedEndpointHour, selectedEndpointSpeed, selectedEndpointQueue, selectedEndpointStatus);
 });
-renderEndpointTable(selectedEndpointHour, selectedEndpointSpeed, selectedEndpointQueue);
+
+endpointQueueFilter.addEventListener('change', (event) => {
+  selectedEndpointQueue = event.target.value;
+  renderEndpointTable(selectedEndpointHour, selectedEndpointSpeed, selectedEndpointQueue, selectedEndpointStatus);
+});
+
+endpointSpeedFilter.addEventListener('change', (event) => {
+  selectedEndpointSpeed = event.target.value;
+  renderEndpointTable(selectedEndpointHour, selectedEndpointSpeed, selectedEndpointQueue, selectedEndpointStatus);
+});
+
+endpointStatusFilter.addEventListener('change', (event) => {
+  selectedEndpointStatus = event.target.value;
+  renderEndpointTable(selectedEndpointHour, selectedEndpointSpeed, selectedEndpointQueue, selectedEndpointStatus);
+});
+
+renderEndpointTable(selectedEndpointHour, selectedEndpointSpeed, selectedEndpointQueue, selectedEndpointStatus);
 
 function createTopicQueueChart(containerId, series) {
   Highcharts.chart(containerId, {
