@@ -386,10 +386,7 @@ function renderEndpointTable(hourFilter = '12:00', speedBucket = 'all', queueFil
   });
   const title = document.getElementById('endpoints-table-title');
   const body = document.getElementById('endpoints-table-body');
-  const queueText = queueFilter === 'all' ? 'всем сценариям' : queueFilter;
-  const speedText = speedBucket === 'all' ? 'всем диапазонам скорости' : `скорости ${speedBucket} сообщ./мин.`;
-  const statusText = statusFilter === 'all' ? 'все статусы' : statusFilter.toLowerCase();
-  title.textContent = `Обращения за ${hourFilter}: ${queueText}, ${speedText}, ${statusText}`;
+  title.textContent = 'Детализация обращений по скорости выгрузки в ИИ';
   body.innerHTML = rows.length ? rows.map((item) => {
     const statusClass = item.status === 'Ошибка' ? ' class="danger-text"' : '';
     return `<tr>
