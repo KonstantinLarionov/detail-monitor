@@ -335,6 +335,20 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
 .topic-chart {
   height: 240px;
 }
+
+.raw-time-control input {
+  width: 98px;
+}
+
+.object-link {
+  color: #315f8a;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.object-link:hover {
+  text-decoration: underline;
+}
 .limit-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .limit-heading span { font-weight: 700; }
 .limit-heading b { color: var(--yellow); font-size: 28px; }

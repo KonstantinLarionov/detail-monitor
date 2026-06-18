@@ -224,7 +224,25 @@ const flkObjects = [
   { letterId: '88013222', answerId: '99043107', objectType: 'Ответ', reason: 'Нет признака подписания ответа', checkedAt: '14.05.2026 10:02' },
   { letterId: '88013216', answerId: '99043103', objectType: 'Ответ', reason: 'Ответ не сопоставлен с обращением', checkedAt: '14.05.2026 10:11' },
   { letterId: '88013217', answerId: '99043104', objectType: 'Ответ', reason: 'Связанное обращение не найдено в регистрационных данных', checkedAt: '14.05.2026 10:38' },
-  { letterId: '88013223', answerId: '99043108', objectType: 'Ответ', reason: 'Ответ привязан к закрытому обращению', checkedAt: '14.05.2026 11:17' }
+  { letterId: '88013223', answerId: '99043108', objectType: 'Ответ', reason: 'Ответ привязан к закрытому обращению', checkedAt: '14.05.2026 11:17' },
+  { letterId: '88013231', answerId: '-', objectType: 'Обращение', reason: 'Нет текста обращения', checkedAt: '14.05.2026 11:24' },
+  { letterId: '88013234', answerId: '-', objectType: 'Обращение', reason: 'Текст обращения не подготовлен к передаче', checkedAt: '14.05.2026 11:42' },
+  { letterId: '88013238', answerId: '99043119', objectType: 'Ответ', reason: 'Нет текста ответа', checkedAt: '14.05.2026 12:03' },
+  { letterId: '88013241', answerId: '99043122', objectType: 'Ответ', reason: 'Отсутствует связь с вопросом', checkedAt: '14.05.2026 12:18' },
+  { letterId: '88013245', answerId: '-', objectType: 'Обращение', reason: 'Нет источника текста обращения', checkedAt: '14.05.2026 12:31' },
+  { letterId: '88013249', answerId: '99043131', objectType: 'Ответ', reason: 'Связанное обращение не прошло ФЛК', checkedAt: '14.05.2026 12:47' },
+  { letterId: '88013253', answerId: '-', objectType: 'Обращение', reason: 'Нет даты регистрации обращения', checkedAt: '14.05.2026 13:06' },
+  { letterId: '88013258', answerId: '99043142', objectType: 'Ответ', reason: 'Нет обязательных сведений для передачи', checkedAt: '14.05.2026 13:22' },
+  { letterId: '88013261', answerId: '-', objectType: 'Обращение', reason: 'Нет идентификатора обращения', checkedAt: '14.05.2026 13:39' },
+  { letterId: '88013266', answerId: '99043151', objectType: 'Ответ', reason: 'Ответ не сопоставлен с обращением', checkedAt: '14.05.2026 14:04' },
+  { letterId: '88013270', answerId: '-', objectType: 'Обращение', reason: 'Текст обращения не подготовлен к передаче', checkedAt: '14.05.2026 14:16' },
+  { letterId: '88013274', answerId: '99043162', objectType: 'Ответ', reason: 'Нет признака подписания ответа', checkedAt: '14.05.2026 14:33' },
+  { letterId: '88013279', answerId: '-', objectType: 'Обращение', reason: 'Нет категории обращения', checkedAt: '14.05.2026 15:09' },
+  { letterId: '88013283', answerId: '99043174', objectType: 'Ответ', reason: 'Отсутствует связь с вопросом', checkedAt: '14.05.2026 15:28' },
+  { letterId: '88013288', answerId: '-', objectType: 'Обращение', reason: 'Нет источника текста обращения', checkedAt: '14.05.2026 16:12' },
+  { letterId: '88013291', answerId: '99043186', objectType: 'Ответ', reason: 'Нет обязательных сведений для передачи', checkedAt: '14.05.2026 16:44' },
+  { letterId: '88013295', answerId: '-', objectType: 'Обращение', reason: 'Нет текста обращения', checkedAt: '14.05.2026 17:03' },
+  { letterId: '88013299', answerId: '99043197', objectType: 'Ответ', reason: 'Связанное обращение не прошло ФЛК', checkedAt: '14.05.2026 17:36' }
 ];
 
 const flkReasonFilter = document.getElementById('flk-reason-filter');
@@ -348,7 +366,7 @@ const endpointStatusFilter = document.getElementById('endpoint-table-status-filt
 speedBuckets.forEach((bucket) => {
   const option = document.createElement('option');
   option.value = bucket;
-  option.textContent = `${bucket} сообщ./мин.`;
+  option.textContent = `${bucket} сек.`;
   endpointSpeedFilter.appendChild(option);
 });
 
@@ -394,7 +412,7 @@ function renderEndpointTable(hourFilter = '12:00', speedBucket = 'all', queueFil
       <td><b>${item.group}</b></td>
       <td>${item.endpoint}</td>
       <td>${item.feature}</td>
-      <td>${item.speed} сообщ./мин.</td>
+      <td>${item.speed} сек.</td>
       <td>${item.time}</td>
       <td${statusClass}>${item.status}</td>
     </tr>`;
@@ -411,13 +429,13 @@ const endpointsChart = Highcharts.chart('endpoints-chart', {
   title: { text: null },
   xAxis: {
     categories: speedBuckets,
-    title: { text: 'Скорость обработки, сообщ./мин.' }
+    title: { text: 'Время ответа, сек.' }
   },
   yAxis: { title: { text: 'Количество обращений, шт.' }, min: 0, allowDecimals: false },
   tooltip: {
     shared: true,
     formatter() {
-      return `<b>${this.x} сообщ./мин.</b><br>${this.points.map((point) => {
+      return `<b>${this.x} сек.</b><br>${this.points.map((point) => {
         return `<span style="color:${point.color}">●</span> ${point.series.name}: <b>${Highcharts.numberFormat(point.y, 0)} обращений</b>`;
       }).join('<br>')}`;
     }
@@ -574,3 +592,517 @@ document.querySelectorAll('.sortable-table th').forEach((header, columnIndex) =>
     rows.forEach((row) => body.appendChild(row));
   });
 });
+
+// RAW-mode overrides for the detailed dashboard.
+// The detailed view must be driven by raw events, not by summary marts.
+const rawState = {
+  selectedDate: null,
+  startTime: '00:00',
+  endTime: '23:59',
+  limitDayType: 'workday',
+  workStart: '09:00',
+  workEnd: '18:00',
+  letterWorkLimit: 100,
+  answerWorkLimit: 90,
+  letterOffLimit: 60,
+  answerOffLimit: 55,
+  letterWeekendLimit: 45,
+  answerWeekendLimit: 40,
+  selectedFlkHour: 'all'
+};
+
+function toDateInputValue(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function toRuDate(value) {
+  if (!value) return '';
+  const [year, month, day] = value.split('-');
+  return `${day}.${month}.${year}`;
+}
+
+function hourToMinutes(value) {
+  const [hour, minute] = value.split(':').map(Number);
+  return hour * 60 + minute;
+}
+
+function isHourInRawPeriod(hour) {
+  const hourMinutes = hourToMinutes(hour);
+  const startMinutes = hourToMinutes(rawState.startTime);
+  const endMinutes = hourToMinutes(rawState.endTime);
+  return hourMinutes >= startMinutes && hourMinutes <= endMinutes;
+}
+
+function periodHours() {
+  return dayHours.filter(isHourInRawPeriod);
+}
+
+function parseSeconds(value) {
+  return Number(String(value).replace(' сек.', '').replace(',', '.'));
+}
+
+function secondsToText(value) {
+  return `${Highcharts.numberFormat(value, 1, ',')} сек.`;
+}
+
+function objectLink(value) {
+  if (!value || value === '-') return '-';
+  return `<a href="#" class="object-link" title="Открыть карточку объекта">${value}</a>`;
+}
+
+function rawFilteredByPeriod(items, hourGetter = (item) => item.hour) {
+  return items.filter((item) => isHourInRawPeriod(hourGetter(item)));
+}
+
+function updateRawPeriodText() {
+  const periodNote = document.querySelector('.period-note');
+  const updatedAt = document.querySelector('.updated-at');
+  const dateText = toRuDate(rawState.selectedDate);
+  if (periodNote) {
+    periodNote.textContent = `Панель строится за 24 часа, начиная с выбранной даты: ${dateText} ${rawState.startTime} - ${rawState.endTime}.`;
+  }
+  if (updatedAt) {
+    updatedAt.textContent = `Данные обновлены: ${dateText} 14:35`;
+  }
+}
+
+function installRawPeriodControls() {
+  const toolbar = document.querySelector('.first-section .section-toolbar .d-flex');
+  const dateInput = toolbar?.querySelector('input[type="date"]');
+  if (!toolbar || !dateInput) return;
+
+  rawState.selectedDate = dateInput.value || toDateInputValue(new Date());
+  dateInput.value = rawState.selectedDate;
+
+  const startLabel = document.createElement('label');
+  startLabel.className = 'filter-control raw-time-control';
+  startLabel.innerHTML = '<span>Время с</span><input class="form-control form-control-sm" type="time" id="raw-start-time" value="00:00" step="60">';
+
+  const endLabel = document.createElement('label');
+  endLabel.className = 'filter-control raw-time-control';
+  endLabel.innerHTML = '<span>Время по</span><input class="form-control form-control-sm" type="time" id="raw-end-time" value="23:59" step="60">';
+
+  toolbar.insertBefore(startLabel, toolbar.querySelector('.apply-button'));
+  toolbar.insertBefore(endLabel, toolbar.querySelector('.apply-button'));
+
+  const applyButton = toolbar.querySelector('.apply-button');
+  applyButton?.addEventListener('click', () => {
+    rawState.selectedDate = dateInput.value;
+    rawState.startTime = document.getElementById('raw-start-time').value || '00:00';
+    rawState.endTime = document.getElementById('raw-end-time').value || '23:59';
+    updateAllRawWidgets();
+  });
+
+  updateRawPeriodText();
+}
+
+function hourlyLimit(objectType, hour) {
+  if (rawState.limitDayType === 'weekend') {
+    return objectType === 'letter' ? rawState.letterWeekendLimit : rawState.answerWeekendLimit;
+  }
+  const hourMinutes = hourToMinutes(hour);
+  const workStart = hourToMinutes(rawState.workStart);
+  const workEnd = hourToMinutes(rawState.workEnd);
+  const isWorkHour = hourMinutes >= workStart && hourMinutes < workEnd;
+  if (objectType === 'letter') return isWorkHour ? rawState.letterWorkLimit : rawState.letterOffLimit;
+  return isWorkHour ? rawState.answerWorkLimit : rawState.answerOffLimit;
+}
+
+function renderRawLimitChart() {
+  const oldChart = Highcharts.charts.find((chart) => chart?.renderTo?.id === 'hourly-limit-chart');
+  oldChart?.destroy();
+
+  const hours = periodHours();
+  Highcharts.chart('hourly-limit-chart', {
+    chart: { type: 'column' },
+    title: { text: null },
+    subtitle: { text: 'Факт = успешная отправка во входную очередь ИИ; лимит берется из настроек типа дня и рабочих часов' },
+    xAxis: { categories: hours, title: { text: 'Час суток' }, labels: { rotation: -45 } },
+    yAxis: { min: 0, title: { text: 'Успешно отправлено, шт.' } },
+    tooltip: { shared: true, valueSuffix: ' шт.' },
+    plotOptions: { column: { borderWidth: 0, borderRadius: 2, grouping: false } },
+    series: [
+      { name: 'Лимит обращений', data: hours.map((hour) => hourlyLimit('letter', hour)), color: palette.lightPurple, pointWidth: 28, pointPlacement: -0.24, zIndex: 1 },
+      { name: 'Обращения', data: hours.map((hour) => historyLetters[dayHours.indexOf(hour)]), color: palette.purple, pointWidth: 16, pointPlacement: -0.24, zIndex: 3 },
+      { name: 'Лимит ответов', data: hours.map((hour) => hourlyLimit('answer', hour)), color: palette.lightSky, pointWidth: 28, pointPlacement: 0.24, zIndex: 1 },
+      { name: 'Ответы', data: hours.map((hour) => historyAnswers[dayHours.indexOf(hour)]), color: palette.sky, pointWidth: 16, pointPlacement: 0.24, zIndex: 3 }
+    ]
+  });
+}
+
+function patchErrorRenderingForRaw() {
+  const originalReasonFilter = historyReasonFilter;
+  const originalTypeFilter = historyTypeFilter;
+  const originalHourFilter = historyHourFilter;
+
+  renderHistoryErrorsTable = function(type = 'all', hour = 'all', reason = 'all') {
+    const rows = rawFilteredByPeriod(historyErrorObjects).filter((item) => {
+      const hourMatches = hour === 'all' || item.hour === hour;
+      const reasonMatches = reason === 'all' || item.reason === reason;
+      const typeMatches = type === 'all' || item.type === type;
+      return hourMatches && reasonMatches && typeMatches;
+    });
+    const title = document.getElementById('history-errors-table-title');
+    const body = document.getElementById('history-errors-table-body');
+    const hourText = hour === 'all' ? 'по выбранному периоду' : `за ${hour}`;
+    const typeText = type === 'all' ? 'все объекты' : type.toLowerCase();
+    const reasonText = reason === 'all' ? '' : `, причина: ${reason}`;
+    title.textContent = `Ошибки интеграции с ИИ: ${typeText}, ${hourText}${reasonText}`;
+    body.innerHTML = rows.length ? rows.map((item) => `<tr>
+        <td>${item.hour}</td>
+        <td>${objectLink(item.letterId)}</td>
+        <td>${objectLink(item.answerId)}</td>
+        <td>${item.type}</td>
+        <td>${item.queue}</td>
+        <td>${item.reason}</td>
+        <td class="danger-text">${item.status}</td>
+      </tr>`).join('') : '<tr><td colspan="7" class="text-muted">Ошибки по выбранным фильтрам не найдены</td></tr>';
+  };
+
+  getHistoryErrorSeries = function(reason = 'all') {
+    const hours = periodHours();
+    return [
+      {
+        name: 'Обращение',
+        data: hours.map((hour) => historyErrorObjects.filter((item) => item.hour === hour && item.type === 'Обращение' && (reason === 'all' || item.reason === reason)).length),
+        color: palette.purple
+      },
+      {
+        name: 'Ответ',
+        data: hours.map((hour) => historyErrorObjects.filter((item) => item.hour === hour && item.type === 'Ответ' && (reason === 'all' || item.reason === reason)).length),
+        color: palette.sky
+      }
+    ];
+  };
+
+  historyErrorsChart.update({ xAxis: { categories: periodHours() } }, false);
+  while (historyErrorsChart.series.length) historyErrorsChart.series[0].remove(false);
+  getHistoryErrorSeries(selectedHistoryErrorReason).forEach((series) => historyErrorsChart.addSeries(series, false));
+  historyErrorsChart.redraw();
+  renderHistoryErrorsTable(selectedHistoryErrorType, selectedHistoryErrorHour, selectedHistoryErrorReason);
+
+  [originalReasonFilter, originalTypeFilter, originalHourFilter].forEach((control) => {
+    control?.addEventListener('change', () => {
+      historyErrorsChart.update({ xAxis: { categories: periodHours() } }, false);
+    });
+  });
+}
+
+function flkHour(item) {
+  const match = item.checkedAt.match(/(\d{2}):\d{2}$/);
+  return match ? `${match[1]}:00` : '00:00';
+}
+
+function installFlkHourFilter() {
+  const filters = document.querySelector('#flk-day-table')?.closest('.table-panel')?.querySelector('.table-filters');
+  if (!filters || document.getElementById('flk-hour-filter')) return;
+  const label = document.createElement('label');
+  label.className = 'filter-control';
+  label.innerHTML = '<span>Час ФЛК</span><select class="form-select form-select-sm" id="flk-hour-filter"><option value="all">Все часы</option></select>';
+  filters.appendChild(label);
+  const select = document.getElementById('flk-hour-filter');
+  dayHours.forEach((hour) => {
+    const option = document.createElement('option');
+    option.value = hour;
+    option.textContent = hour;
+    select.appendChild(option);
+  });
+  select.addEventListener('change', (event) => {
+    rawState.selectedFlkHour = event.target.value;
+    renderFlkTable(selectedFlkType, selectedFlkReason, rawState.selectedFlkHour);
+  });
+}
+
+function renderRawFlkChart() {
+  const oldChart = Highcharts.charts.find((chart) => chart?.renderTo?.id === 'flk-day-chart');
+  oldChart?.destroy();
+
+  const hours = periodHours();
+  Highcharts.chart('flk-day-chart', {
+    chart: { type: 'column' },
+    title: { text: null },
+    subtitle: { text: null },
+    xAxis: { categories: hours, title: { text: 'Час проверки' }, labels: { rotation: -45 } },
+    yAxis: { min: 0, allowDecimals: false, title: { text: 'Не прошли ФЛК, шт.' } },
+    tooltip: { shared: true, valueSuffix: ' шт.' },
+    plotOptions: {
+      column: {
+        borderWidth: 0,
+        borderRadius: 2,
+        cursor: 'pointer',
+        point: {
+          events: {
+            click() {
+              selectedFlkType = this.series.name;
+              rawState.selectedFlkHour = this.category;
+              document.getElementById('flk-type-filter').value = selectedFlkType;
+              document.getElementById('flk-hour-filter').value = rawState.selectedFlkHour;
+              renderFlkTable(selectedFlkType, selectedFlkReason, rawState.selectedFlkHour);
+            }
+          }
+        }
+      }
+    },
+    series: [
+      {
+        name: 'Обращение',
+        data: hours.map((hour) => flkObjects.filter((item) => item.objectType === 'Обращение' && flkHour(item) === hour && (selectedFlkReason === 'all' || item.reason === selectedFlkReason)).length),
+        color: palette.purple
+      },
+      {
+        name: 'Ответ',
+        data: hours.map((hour) => flkObjects.filter((item) => item.objectType === 'Ответ' && flkHour(item) === hour && (selectedFlkReason === 'all' || item.reason === selectedFlkReason)).length),
+        color: palette.sky
+      }
+    ]
+  });
+}
+
+function patchFlkRenderingForRaw() {
+  installFlkHourFilter();
+  renderFlkTable = function(type = 'all', reason = 'all', hour = 'all') {
+    const rows = flkObjects.filter((item) => {
+      const typeMatches = type === 'all' || item.objectType === type;
+      const reasonMatches = reason === 'all' || item.reason === reason;
+      const hourMatches = hour === 'all' || flkHour(item) === hour;
+      return typeMatches && reasonMatches && hourMatches && isHourInRawPeriod(flkHour(item));
+    });
+    const title = document.getElementById('flk-table-title');
+    const body = document.getElementById('flk-table-body');
+    const typeText = type === 'all' ? 'все объекты' : type.toLowerCase();
+    const reasonText = reason === 'all' ? 'все причины' : reason;
+    const hourText = hour === 'all' ? 'выбранный период' : hour;
+    title.textContent = `Объекты, не прошедшие ФЛК: ${typeText}, ${reasonText}, ${hourText}`;
+    body.innerHTML = rows.length ? rows.map((item) => `<tr>
+      <td>${objectLink(item.letterId)}</td>
+      <td>${objectLink(item.answerId)}</td>
+      <td>${item.objectType}</td>
+      <td>${item.objectType === 'Обращение' ? 'Обязательные поля обращения' : 'Обязательные поля ответа / связь'}</td>
+      <td>${item.reason}</td>
+      <td>${item.checkedAt}</td>
+    </tr>`).join('') : '<tr><td colspan="6" class="text-muted">Объекты по выбранным фильтрам не найдены</td></tr>';
+  };
+
+  document.getElementById('flk-type-filter').addEventListener('change', () => renderRawFlkChart());
+  flkReasonFilter.addEventListener('change', () => {
+    renderRawFlkChart();
+    renderFlkTable(selectedFlkType, selectedFlkReason, rawState.selectedFlkHour);
+  });
+  renderRawFlkChart();
+  renderFlkTable(selectedFlkType, selectedFlkReason, rawState.selectedFlkHour);
+}
+
+const responseBuckets = ['0-2', '2-5', '5-10', '10-15', '15+'];
+
+endpointRequests.forEach((item, index) => {
+  item.responseSeconds = parseSeconds(item.time);
+  item.sentAt = `${toRuDate(rawState.selectedDate || toDateInputValue(new Date()))} ${item.hour}`;
+  const responseStartMinute = hourToMinutes(item.hour);
+  const finishedTotalSeconds = responseStartMinute * 60 + item.responseSeconds;
+  const finishedHour = String(Math.floor(finishedTotalSeconds / 3600)).padStart(2, '0');
+  const finishedMinute = String(Math.floor((finishedTotalSeconds % 3600) / 60)).padStart(2, '0');
+  const finishedSecond = String(Math.floor(finishedTotalSeconds % 60)).padStart(2, '0');
+  item.finishedAt = `${finishedHour}:${finishedMinute}:${finishedSecond}`;
+  item.letterId = item.id;
+  item.answerId = index % 3 === 0 ? '-' : String(99050000 + index);
+  if (item.endpoint === 'MOSEDO_AI.HISTORY' || item.feature === 'Загрузка исторических данных') {
+    item.queue = 'Загрузка истории';
+    item.group = 'HISTORY';
+  }
+});
+
+function getResponseBucket(seconds) {
+  if (seconds < 2) return '0-2';
+  if (seconds < 5) return '2-5';
+  if (seconds < 10) return '5-10';
+  if (seconds < 15) return '10-15';
+  return '15+';
+}
+
+function installSpeedRawControls() {
+  const speedSection = document.getElementById('endpoints-chart')?.closest('.content-section');
+  const speedText = speedSection?.querySelector('.section-title p');
+  const hourLabel = document.querySelector('label.inline-select:has(#endpoint-hour-filter) span');
+  if (speedText) speedText.textContent = 'Количество обращений по 10 диапазонам скорости обработки; детализация по ID доступна по нажатию на столбец';
+  if (hourLabel) hourLabel.textContent = 'Час';
+
+  endpointQueueFilter.innerHTML = `
+    <option value="Загрузка истории">Загрузка истории</option>
+    <option value="all">Все сценарии</option>
+    <option value="1023 REST API">1023 REST API</option>
+    <option value="93 ответы и рекомендации">93 ответы и рекомендации</option>
+    <option value="265 остальные сценарии">265 остальные сценарии</option>`;
+  endpointQueueFilter.value = 'Загрузка истории';
+  selectedEndpointQueue = 'Загрузка истории';
+
+  endpointSpeedFilter.innerHTML = '<option value="all">Все диапазоны</option>';
+  responseBuckets.forEach((bucket) => {
+    const option = document.createElement('option');
+    option.value = bucket;
+    option.textContent = `${bucket} сек.`;
+    endpointSpeedFilter.appendChild(option);
+  });
+
+  const speedLabel = endpointSpeedFilter.closest('label')?.querySelector('span');
+  if (speedLabel) speedLabel.textContent = 'Время ответа';
+
+  const headerRow = document.querySelector('#endpoints-details-table thead tr');
+  if (headerRow) {
+    headerRow.innerHTML = '<th>ID обращения</th><th>ID ответа</th><th>Сценарий</th><th>Пара топиков / endpoint</th><th>Функциональный блок</th><th>Время отправки</th><th>Время результата</th><th>Время ответа, сек.</th><th>Статус</th>';
+  }
+}
+
+function speedRows(hourFilter = selectedEndpointHour, responseBucket = selectedEndpointSpeed, queueFilter = selectedEndpointQueue, statusFilter = selectedEndpointStatus) {
+  return endpointRequests.filter((item) => {
+    const hourMatches = !hourFilter || item.hour === hourFilter;
+    const periodMatches = isHourInRawPeriod(item.hour);
+    const speedMatches = responseBucket === 'all' || getResponseBucket(item.responseSeconds) === responseBucket;
+    const queueMatches = queueFilter === 'all' || item.queue === queueFilter;
+    const statusMatches = statusFilter === 'all' || item.status === statusFilter;
+    return hourMatches && periodMatches && speedMatches && queueMatches && statusMatches;
+  });
+}
+
+function speedChartSeries() {
+  const queues = selectedEndpointQueue === 'all'
+    ? ['Загрузка истории', '1023 REST API', '93 ответы и рекомендации', '265 остальные сценарии']
+    : [selectedEndpointQueue];
+
+  return queues.map((queue) => ({
+    name: queue,
+    data: responseBuckets.map((bucket) => {
+      return endpointRequests.filter((item) => {
+        return item.hour === selectedEndpointHour
+          && isHourInRawPeriod(item.hour)
+          && item.queue === queue
+          && getResponseBucket(item.responseSeconds) === bucket
+          && (selectedEndpointStatus === 'all' || item.status === selectedEndpointStatus);
+      }).length;
+    }),
+    color: queue === 'Загрузка истории' ? palette.orange : queue === '1023 REST API' ? palette.purple : queue === '93 ответы и рекомендации' ? palette.sky : palette.green
+  }));
+}
+
+getEndpointChartSeries = function() {
+  return speedChartSeries();
+};
+
+renderEndpointTable = function(hourFilter = selectedEndpointHour, responseBucket = selectedEndpointSpeed, queueFilter = selectedEndpointQueue, statusFilter = selectedEndpointStatus) {
+  const rows = speedRows(hourFilter, responseBucket, queueFilter, statusFilter);
+  const title = document.getElementById('endpoints-table-title');
+  const body = document.getElementById('endpoints-table-body');
+  const hourText = hourFilter ? `час ${hourFilter}` : 'выбранный период';
+  title.textContent = `Обращения по выбранному часу и всем скоростям: ${hourText}`;
+  body.innerHTML = rows.length ? rows.map((item) => {
+    const statusClass = item.status === 'Ошибка' ? ' class="danger-text"' : '';
+    return `<tr>
+      <td>${objectLink(item.letterId)}</td>
+      <td>${objectLink(item.answerId)}</td>
+      <td><b>${item.queue}</b></td>
+      <td>${item.endpoint}</td>
+      <td>${item.feature}</td>
+      <td>${item.sentAt}</td>
+      <td>${item.finishedAt}</td>
+      <td>${secondsToText(item.responseSeconds)}</td>
+      <td${statusClass}>${item.status}</td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="9" class="text-muted">В выбранный час и диапазон обращений не попало</td></tr>';
+};
+
+function renderRawSpeedChart() {
+  endpointsChart.update({
+    chart: { type: 'column' },
+    xAxis: { categories: responseBuckets, title: { text: 'Время ответа, сек.' }, labels: { rotation: 0 } },
+    yAxis: { title: { text: 'Количество объектов, шт.' }, min: 0, allowDecimals: false },
+    tooltip: {
+      shared: true,
+      formatter() {
+        return `<b>${this.x} сек.</b><br>${this.points.map((point) => {
+          return `<span style="color:${point.color}">●</span> ${point.series.name}: <b>${Highcharts.numberFormat(point.y, 0)} объектов</b>`;
+        }).join('<br>')}`;
+      }
+    },
+    plotOptions: {
+      column: {
+        borderWidth: 0,
+        borderRadius: 2,
+        cursor: 'pointer',
+        groupPadding: 0.16,
+        pointPadding: 0.06,
+        point: {
+          events: {
+            click() {
+              selectedEndpointSpeed = this.category;
+              selectedEndpointQueue = this.series.name;
+              endpointSpeedFilter.value = selectedEndpointSpeed;
+              endpointQueueFilter.value = selectedEndpointQueue;
+              renderEndpointTable(selectedEndpointHour, selectedEndpointSpeed, selectedEndpointQueue, selectedEndpointStatus);
+            }
+          }
+        }
+      }
+    }
+  }, false);
+  while (endpointsChart.series.length) endpointsChart.series[0].remove(false);
+  speedChartSeries().forEach((series) => endpointsChart.addSeries(series, false));
+  endpointsChart.redraw();
+  renderEndpointTable(selectedEndpointHour, selectedEndpointSpeed, selectedEndpointQueue, selectedEndpointStatus);
+}
+
+function patchSpeedEventsForRaw() {
+  document.getElementById('endpoint-hour-filter').value = selectedEndpointHour;
+  endpointQueueFilter.addEventListener('change', (event) => {
+    selectedEndpointQueue = event.target.value;
+    renderRawSpeedChart();
+  });
+  endpointSpeedFilter.addEventListener('change', (event) => {
+    selectedEndpointSpeed = event.target.value;
+    renderEndpointTable(selectedEndpointHour, selectedEndpointSpeed, selectedEndpointQueue, selectedEndpointStatus);
+  });
+  endpointStatusFilter.addEventListener('change', (event) => {
+    selectedEndpointStatus = event.target.value;
+    renderRawSpeedChart();
+  });
+  document.getElementById('endpoint-hour-filter').addEventListener('change', (event) => {
+    selectedEndpointHour = event.target.value;
+    selectedEndpointQueue = endpointQueueFilter.value;
+    selectedEndpointSpeed = 'all';
+    endpointSpeedFilter.value = selectedEndpointSpeed;
+    renderRawSpeedChart();
+    renderEndpointTable(selectedEndpointHour, selectedEndpointSpeed, selectedEndpointQueue, selectedEndpointStatus);
+  });
+}
+
+function patchExportNames() {
+  const names = {
+    'history-errors-table': 'Ошибки_интеграции_с_ИИ.csv',
+    'flk-day-table': 'ФЛК_объектов_по_часам.csv',
+    'endpoints-details-table': 'Скорость_обработки_по_событиям.csv',
+    'queues-details-table': 'Состояние_очередей_детализация.csv'
+  };
+  document.querySelectorAll('[data-export-table]').forEach((button) => {
+    if (names[button.dataset.exportTable]) {
+      button.dataset.exportFile = names[button.dataset.exportTable];
+    }
+  });
+}
+
+function updateAllRawWidgets() {
+  updateRawPeriodText();
+  renderRawLimitChart();
+  patchErrorRenderingForRaw();
+  renderRawFlkChart();
+  renderFlkTable(selectedFlkType, selectedFlkReason, rawState.selectedFlkHour);
+  renderRawSpeedChart();
+}
+
+installRawPeriodControls();
+installFlkHourFilter();
+installSpeedRawControls();
+patchFlkRenderingForRaw();
+patchSpeedEventsForRaw();
+patchExportNames();
+updateAllRawWidgets();
