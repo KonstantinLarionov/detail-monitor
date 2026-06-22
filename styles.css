@@ -188,6 +188,11 @@ p { margin-top: 4px; color: var(--muted); font-size: 12px; }
   font-size: 12px;
 }
 
+.form-control.is-invalid {
+  border-color: var(--red);
+  box-shadow: 0 0 0 1px rgba(219, 45, 77, .12);
+}
+
 .apply-button { border: 1px solid #d8e0e6; }
 .updated-at { color: #6a7780; font-size: 11px; text-align: right; }
 .period-note {

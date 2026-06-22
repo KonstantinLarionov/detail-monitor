@@ -597,6 +597,8 @@ document.querySelectorAll('.sortable-table th').forEach((header, columnIndex) =>
 // The detailed view must be driven by raw events, not by summary marts.
 const rawState = {
   selectedDate: null,
+  dateFrom: null,
+  dateTo: null,
   startTime: '00:00',
   endTime: '23:59',
   limitDayType: 'workday',
@@ -660,22 +662,27 @@ function rawFilteredByPeriod(items, hourGetter = (item) => item.hour) {
 function updateRawPeriodText() {
   const periodNote = document.querySelector('.period-note');
   const updatedAt = document.querySelector('.updated-at');
-  const dateText = toRuDate(rawState.selectedDate);
+  const dateFromText = toRuDate(rawState.dateFrom || rawState.selectedDate);
+  const dateToText = toRuDate(rawState.dateTo || rawState.dateFrom || rawState.selectedDate);
   if (periodNote) {
-    periodNote.textContent = `Панель строится за 24 часа, начиная с выбранной даты: ${dateText} ${rawState.startTime} - ${rawState.endTime}.`;
+    periodNote.textContent = `Панель строится за выбранный период: ${dateFromText} ${rawState.startTime} - ${dateToText} ${rawState.endTime}.`;
   }
   if (updatedAt) {
-    updatedAt.textContent = `Данные обновлены: ${dateText} 14:35`;
+    updatedAt.textContent = `Данные обновлены: ${dateToText} 14:35`;
   }
 }
 
 function installRawPeriodControls() {
   const toolbar = document.querySelector('.first-section .section-toolbar .d-flex');
-  const dateInput = toolbar?.querySelector('input[type="date"]');
-  if (!toolbar || !dateInput) return;
+  const dateFromInput = document.getElementById('raw-date-from') || toolbar?.querySelector('input[type="date"]');
+  const dateToInput = document.getElementById('raw-date-to');
+  if (!toolbar || !dateFromInput || !dateToInput) return;
 
-  rawState.selectedDate = dateInput.value || toDateInputValue(new Date());
-  dateInput.value = rawState.selectedDate;
+  rawState.dateFrom = dateFromInput.value || toDateInputValue(new Date());
+  rawState.dateTo = dateToInput.value || rawState.dateFrom;
+  rawState.selectedDate = rawState.dateFrom;
+  dateFromInput.value = rawState.dateFrom;
+  dateToInput.value = rawState.dateTo;
 
   const startLabel = document.createElement('label');
   startLabel.className = 'filter-control raw-time-control';
@@ -690,7 +697,21 @@ function installRawPeriodControls() {
 
   const applyButton = toolbar.querySelector('.apply-button');
   applyButton?.addEventListener('click', () => {
-    rawState.selectedDate = dateInput.value;
+    const dateFrom = dateFromInput.value || toDateInputValue(new Date());
+    const dateTo = dateToInput.value || dateFrom;
+    const hasInvalidPeriod = dateFrom > dateTo;
+
+    dateFromInput.classList.toggle('is-invalid', hasInvalidPeriod);
+    dateToInput.classList.toggle('is-invalid', hasInvalidPeriod);
+    dateToInput.setCustomValidity(hasInvalidPeriod ? 'Дата по не может быть меньше даты с' : '');
+    if (hasInvalidPeriod) {
+      dateToInput.reportValidity();
+      return;
+    }
+
+    rawState.dateFrom = dateFrom;
+    rawState.dateTo = dateTo;
+    rawState.selectedDate = dateFrom;
     rawState.startTime = document.getElementById('raw-start-time').value || '00:00';
     rawState.endTime = document.getElementById('raw-end-time').value || '23:59';
     updateAllRawWidgets();
