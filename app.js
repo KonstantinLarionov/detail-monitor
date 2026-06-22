@@ -672,6 +672,13 @@ function updateRawPeriodText() {
   }
 }
 
+function updateRawEventDates() {
+  const eventDate = toRuDate(rawState.dateFrom || rawState.selectedDate || toDateInputValue(new Date()));
+  endpointRequests.forEach((item) => {
+    item.sentAt = `${eventDate} ${item.hour}`;
+  });
+}
+
 function installRawPeriodControls() {
   const toolbar = document.querySelector('.first-section .section-toolbar .d-flex');
   const dateFromInput = document.getElementById('raw-date-from') || toolbar?.querySelector('input[type="date"]');
@@ -696,6 +703,14 @@ function installRawPeriodControls() {
   toolbar.insertBefore(endLabel, toolbar.querySelector('.apply-button'));
 
   const applyButton = toolbar.querySelector('.apply-button');
+  [dateFromInput, dateToInput].forEach((input) => {
+    input.addEventListener('input', () => {
+      dateFromInput.classList.remove('is-invalid');
+      dateToInput.classList.remove('is-invalid');
+      dateToInput.setCustomValidity('');
+    });
+  });
+
   applyButton?.addEventListener('click', () => {
     const dateFrom = dateFromInput.value || toDateInputValue(new Date());
     const dateTo = dateToInput.value || dateFrom;
@@ -714,6 +729,7 @@ function installRawPeriodControls() {
     rawState.selectedDate = dateFrom;
     rawState.startTime = document.getElementById('raw-start-time').value || '00:00';
     rawState.endTime = document.getElementById('raw-end-time').value || '23:59';
+    updateRawEventDates();
     updateAllRawWidgets();
   });
 
@@ -920,7 +936,7 @@ const responseBuckets = ['0-2', '2-5', '5-10', '10-15', '15+'];
 
 endpointRequests.forEach((item, index) => {
   item.responseSeconds = parseSeconds(item.time);
-  item.sentAt = `${toRuDate(rawState.selectedDate || toDateInputValue(new Date()))} ${item.hour}`;
+  item.sentAt = `${toRuDate(rawState.dateFrom || rawState.selectedDate || toDateInputValue(new Date()))} ${item.hour}`;
   const responseStartMinute = hourToMinutes(item.hour);
   const finishedTotalSeconds = responseStartMinute * 60 + item.responseSeconds;
   const finishedHour = String(Math.floor(finishedTotalSeconds / 3600)).padStart(2, '0');
@@ -1113,6 +1129,7 @@ function patchExportNames() {
 
 function updateAllRawWidgets() {
   updateRawPeriodText();
+  updateRawEventDates();
   renderRawLimitChart();
   patchErrorRenderingForRaw();
   renderRawFlkChart();
